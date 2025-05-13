@@ -7,7 +7,9 @@ export class OperacaoController {
 
     async registerRoutes(app: FastifyInstance) {
         // Listar todas as operações
-        app.get("/operacoes", async (request, reply) => {
+        app.get("/operacoes", {
+            onRequest: [app.authenticate]
+        }, async (request, reply) => {
             try {
                 const operacoes = await this.service.listarOperacoes();
                 return reply.send(operacoes);
@@ -17,7 +19,9 @@ export class OperacaoController {
         });
 
         // Buscar operação por ID
-        app.get("/operacoes/:id", async (request, reply) => {
+        app.get("/operacoes/:id", {
+            onRequest: [app.authenticate]
+        }, async (request, reply) => {
             try {
                 const { id } = request.params as { id: string };
                 const operacao = await this.service.buscarOperacao(id);
@@ -31,7 +35,9 @@ export class OperacaoController {
         });
 
         // Criar nova operação
-        app.post("/operacoes", async (request, reply) => {
+        app.post("/operacoes", {
+            onRequest: [app.authenticate]
+        }, async (request, reply) => {
             try {
                 const operacao = request.body as Partial<Operacao>;
                 const novaOperacao = await this.service.criarOperacao(operacao);
@@ -45,7 +51,9 @@ export class OperacaoController {
         });
 
         // Atualizar operação
-        app.put("/operacoes/:id", async (request, reply) => {
+        app.put("/operacoes/:id", {
+            onRequest: [app.authenticate]
+        }, async (request, reply) => {
             try {
                 const { id } = request.params as { id: string };
                 const operacao = request.body as Partial<Operacao>;
@@ -60,7 +68,9 @@ export class OperacaoController {
         });
 
         // Deletar operação
-        app.delete("/operacoes/:id", async (request, reply) => {
+        app.delete("/operacoes/:id", {
+            onRequest: [app.authenticate]
+        }, async (request, reply) => {
             try {
                 const { id } = request.params as { id: string };
                 const sucesso = await this.service.deletarOperacao(id);
@@ -74,7 +84,9 @@ export class OperacaoController {
         });
 
         // Buscar operações por período
-        app.get("/operacoes/periodo", async (request, reply) => {
+        app.get("/operacoes/periodo", {
+            onRequest: [app.authenticate]
+        }, async (request, reply) => {
             try {
                 const { dataInicio, dataFim } = request.query as { dataInicio: string; dataFim: string };
                 const operacoes = await this.service.buscarPorPeriodo(

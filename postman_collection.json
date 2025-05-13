@@ -1,0 +1,271 @@
+{
+	"info": {
+		"_postman_id": "b0e7b0a0-0b0a-4b0a-8b0a-0b0a0b0a0b0a",
+		"name": "ImpostoFacil API",
+		"description": "Collection for ImpostoFacil API endpoints",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"description": "Endpoints for managing users",
+			"item": [
+				{
+					"name": "Get All Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users",
+							"host": ["{{base_url}}"],
+							"path": ["users"]
+						}
+					}
+				},
+				{
+					"name": "Get User by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/:id",
+							"host": ["{{base_url}}"],
+							"path": ["users", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"description": "User ID"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Create User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"user@example.com\",\n    \"password\": \"yourpassword\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/users",
+							"host": ["{{base_url}}"],
+							"path": ["users"]
+						}
+					}
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"updated@example.com\",\n    \"password\": \"newpassword\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/users/:id",
+							"host": ["{{base_url}}"],
+							"path": ["users", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"description": "User ID"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/:id",
+							"host": ["{{base_url}}"],
+							"path": ["users", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"description": "User ID"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get User by Email",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/email/:email",
+							"host": ["{{base_url}}"],
+							"path": ["users", "email", ":email"],
+							"variable": [
+								{
+									"key": "email",
+									"value": "",
+									"description": "User email"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Operações",
+			"description": "Endpoints for managing operações (trades)",
+			"item": [
+				{
+					"name": "Listar Operações",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/operacoes",
+							"host": ["{{base_url}}"],
+							"path": ["operacoes"]
+						}
+					}
+				},
+				{
+					"name": "Buscar Operação por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/operacoes/:id",
+							"host": ["{{base_url}}"],
+							"path": ["operacoes", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"description": "ID da operação"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Criar Operação",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"tipo\": \"compra\",\n    \"ativo\": \"PETR4\",\n    \"quantidade\": 100,\n    \"preco\": 28.50,\n    \"data\": \"2024-03-20T10:00:00Z\",\n    \"userId\": \"seu-user-id-aqui\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/operacoes",
+							"host": ["{{base_url}}"],
+							"path": ["operacoes"]
+						}
+					}
+				},
+				{
+					"name": "Atualizar Operação",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"tipo\": \"venda\",\n    \"ativo\": \"PETR4\",\n    \"quantidade\": 50,\n    \"preco\": 30.75,\n    \"data\": \"2024-03-21T10:00:00Z\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/operacoes/:id",
+							"host": ["{{base_url}}"],
+							"path": ["operacoes", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"description": "ID da operação"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Deletar Operação",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/operacoes/:id",
+							"host": ["{{base_url}}"],
+							"path": ["operacoes", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"description": "ID da operação"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Buscar Operações por Período",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/operacoes/periodo?dataInicio=2024-01-01T00:00:00Z&dataFim=2024-12-31T23:59:59Z",
+							"host": ["{{base_url}}"],
+							"path": ["operacoes", "periodo"],
+							"query": [
+								{
+									"key": "dataInicio",
+									"value": "2024-01-01T00:00:00Z",
+									"description": "Data inicial do período"
+								},
+								{
+									"key": "dataFim",
+									"value": "2024-12-31T23:59:59Z",
+									"description": "Data final do período"
+								}
+							]
+						}
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3000",
+			"type": "string",
+			"description": "Base URL for the API"
+		}
+	]
+} 
