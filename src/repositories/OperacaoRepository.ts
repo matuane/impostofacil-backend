@@ -1,39 +1,5 @@
-import { Operacao } from '../entities/Operacao';
+import { CreateOperacaoInput, UpdateOperacaoInput } from '../interfaces/operacao';
 import prisma from '../lib/prisma';
-
-/**
- * Interface para criação de uma nova operação
- * @property {string} tipo - Tipo da operação (compra/venda)
- * @property {string} ativo - Código do ativo negociado
- * @property {number} quantidade - Quantidade negociada
- * @property {number} preco - Preço unitário da operação
- * @property {number} valorTotal - Valor total da operação
- * @property {Date} data - Data da operação
- * @property {string} userId - ID do usuário que realizou a operação
- */
-type CreateOperacaoInput = {
-    tipo: string;
-    ativo: string;
-    quantidade: number;
-    preco: number;
-    valorTotal: number;
-    data: Date;
-    userId: string;
-};
-
-/**
- * Interface para atualização de uma operação existente
- * Todos os campos são opcionais
- */
-type UpdateOperacaoInput = {
-    tipo?: string;
-    ativo?: string;
-    quantidade?: number;
-    preco?: number;
-    valorTotal?: number;
-    data?: Date;
-    userId?: string;
-};
 
 /**
  * Repositório responsável por gerenciar as operações de CRUD de operações financeiras no banco de dados

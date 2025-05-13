@@ -1,17 +1,8 @@
 import { OperacaoRepository } from "../repositories/OperacaoRepository";
 import { Operacao } from "../entities/Operacao";
+import { CriarOperacaoDTO } from "../interfaces/operacao";
 
-/**
- * Interface para criação de operação com campos obrigatórios
- */
-type CriarOperacaoDTO = {
-    tipo: string;
-    ativo: string;
-    quantidade: number;
-    preco: number;
-    data: Date;
-    userId: string;
-};
+
 
 /**
  * Serviço responsável pela lógica de negócio relacionada às operações financeiras

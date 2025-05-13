@@ -1,6 +1,7 @@
 import { FastifyInstance } from "fastify";
 import { OperacaoService } from "../services/OperacaoService";
 import { Operacao } from "../entities/Operacao";
+import { CriarOperacaoDTO } from "../interfaces/operacao";
 
 export class OperacaoController {
     private service = new OperacaoService();
@@ -39,7 +40,7 @@ export class OperacaoController {
             onRequest: [app.authenticate]
         }, async (request, reply) => {
             try {
-                const operacao = request.body as Partial<Operacao>;
+                const operacao = request.body as CriarOperacaoDTO;
                 const novaOperacao = await this.service.criarOperacao(operacao);
                 return reply.status(201).send(novaOperacao);
             } catch (error: any) {
