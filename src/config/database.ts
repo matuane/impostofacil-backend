@@ -1,5 +1,5 @@
-import { DataSource } from "typeorm";
 import "reflect-metadata";
+import { DataSource } from "typeorm";
 
 export const AppDataSource = new DataSource({
     type: "postgres",
@@ -8,7 +8,7 @@ export const AppDataSource = new DataSource({
     username: "postgres",
     password: "postgres",
     database: "impostofacil",
-    synchronize: true,
+    synchronize: false,
     logging: true,
     entities: ["src/entities/*.ts"],
     migrations: ["src/migrations/*.ts"],

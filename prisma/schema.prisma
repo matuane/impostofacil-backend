@@ -14,29 +14,59 @@ datasource db {
 }
 
 model User {
-  id           String    @id @default(uuid())
-  email        String    @unique
-  password     String
-  refreshToken String?
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  operacoes    Operacao[]
+  id            String         @id @default(uuid())
+  email         String        @unique
+  name          String?
+  password      String
+  refreshToken  String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  transactions  Transaction[]
+  monthlyTaxes  MonthlyTax[]
 
   @@map("users")
 }
 
-model Operacao {
-  id          String    @id @default(uuid())
-  tipo        String    // "compra" ou "venda"
-  ativo       String
-  quantidade  Decimal   @db.Decimal(10, 2)
-  preco       Decimal   @db.Decimal(10, 2)
-  valorTotal  Decimal   @db.Decimal(10, 2)
-  data        DateTime
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  userId      String
-  user        User      @relation(fields: [userId], references: [id])
+model Asset {
+  id           String         @id @default(uuid())
+  ticker       String        @unique
+  type         String
+  transactions Transaction[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
 
-  @@map("operacoes")
+  @@map("assets")
+}
+
+model Transaction {
+  id             String   @id @default(uuid())
+  type           String // "compra" ou "venda"
+  date           DateTime
+  quantity       Int
+  price_per_unit Decimal  @db.Decimal(10, 2)
+  total_value    Decimal  @db.Decimal(10, 2)
+  userId         String
+  assetId        String
+  user           User     @relation(fields: [userId], references: [id])
+  asset          Asset    @relation(fields: [assetId], references: [id])
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("transactions")
+}
+
+model MonthlyTax {
+  id                 String    @id @default(uuid())
+  year               Int
+  month              Int
+  asset_type         String
+  total_gain         Decimal   @db.Decimal(10, 2)
+  carried_forward_tax Decimal   @db.Decimal(10, 2)
+  tax_due            Decimal   @db.Decimal(10, 2)
+  userId             String
+  user               User      @relation(fields: [userId], references: [id])
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  @@map("monthly_taxes")
 }

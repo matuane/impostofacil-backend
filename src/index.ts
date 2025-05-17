@@ -1,59 +1,68 @@
-import fastify from "fastify";
-import cors from "@fastify/cors";
-import jwt from "@fastify/jwt";
-import { AppDataSource } from "./config/database";
-import { OperacaoController } from "./controllers/OperacaoController";
-import { AuthController } from "./controllers/AuthController";
 import "reflect-metadata";
+import fastify from "fastify";
+import jwt from "@fastify/jwt";
+import cors from "@fastify/cors";
+import swagger from "@fastify/swagger";
+import swaggerUi from "@fastify/swagger-ui";
+import { AppDataSource } from "./config/database";
+import { userRoutes } from "./routes/user.routes";
+import { authRoutes } from "./routes/auth.routes";
+import { assetRoutes } from "./routes/assets.route";
+import { transactionRoutes } from "./routes/transactions.route";
+import { monthlyTaxRoutes } from "./routes/monthlyTaxes.route";
+import { swaggerOptions, swaggerUiOptions } from "./config/swagger";
 
-const app = fastify({ logger: true });
+export const app = fastify({ logger: true });
 
-// Registrar plugins
-app.register(cors, {
-    origin: "*",
-    methods: ["GET", "POST", "PUT", "DELETE"],
-});
-
-// Registrar JWT
-app.register(jwt, {
-    secret: process.env.JWT_SECRET || "impostofacil-key",
-});
-
-// Decorator para autenticação
-app.decorate("authenticate", async (request: any, reply: any) => {
-    try {
-        await request.jwtVerify();
-    } catch (err) {
-        reply.send(err);
-    }
-});
-
-// Inicializar o banco de dados
-AppDataSource.initialize()
-    .then(() => {
-        console.log("Banco de dados inicializado com sucesso!");
-    })
-    .catch((error: any) => {
-        console.error("Erro ao inicializar o banco de dados:", error);
+const initialize = async () => {
+    // Registrar plugins
+    await app.register(cors, {
+        origin: "*",
+        methods: ["GET", "POST", "PUT", "DELETE"],
     });
 
-// Registrar rotas
-const operacaoController = new OperacaoController();
-operacaoController.registerRoutes(app);
+    // Configurar JWT
+    await app.register(jwt, {
+        secret: process.env.JWT_SECRET || "investfacil-key"
+    });
 
-const authController = new AuthController(app);
-authController.registerRoutes(app);
+    // Configurar Swagger - Importante: swagger deve ser registrado antes do swagger-ui
+    await app.register(swagger, swaggerOptions);
+    await app.register(swaggerUi, swaggerUiOptions);
 
-// Rota de teste
-app.get("/", async (request, reply) => {
-    return { message: "API ImpostoFácil funcionando!" };
-});
+    // Decorador para autenticação
+    app.decorate("authenticate", async function(request: any, reply: any) {
+        try {
+            await request.jwtVerify();
+        } catch (err) {
+            reply.send(err);
+        }
+    });
 
-// Iniciar o servidor
+    // Inicializar banco de dados
+    await AppDataSource.initialize().then(() => {
+        console.log("Database initialized");
+    }).catch((error) => {
+        console.error("Error initializing database:", error);
+    });
+
+    // Registrar rotas
+    await app.register(authRoutes, { prefix: '/auth' });
+    await app.register(userRoutes, { prefix: '/users' });
+    await app.register(assetRoutes, { prefix: '/assets' });
+    await app.register(transactionRoutes, { prefix: '/transactions' });
+    await app.register(monthlyTaxRoutes, { prefix: '/monthly-taxes' });
+
+    return app;
+};
+
+// Iniciar servidor
 const start = async () => {
     try {
-        await app.listen({ port: 3001, host: "0.0.0.0" });
-        console.log("Servidor rodando na porta 3001");
+        await initialize();
+        await app.listen({ port: 3000 });
+        console.log('Server running at http://localhost:3000');
+        console.log('Swagger documentation available at http://localhost:3000/docs');
     } catch (err) {
         app.log.error(err);
         process.exit(1);

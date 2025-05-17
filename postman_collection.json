@@ -7,17 +7,72 @@
 	},
 	"item": [
 		{
+			"name": "Auth",
+			"description": "Authentication endpoints",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": ["{{baseUrl}}"],
+							"path": ["auth", "login"]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"user@example.com\",\n    \"password\": \"password123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					}
+				},
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"newuser@example.com\",\n    \"password\": \"yourpassword\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/register",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "register"]
+						},
+						"description": "Register a new user"
+					}
+				}
+			]
+		},
+		{
 			"name": "Users",
 			"description": "Endpoints for managing users",
 			"item": [
 				{
-					"name": "Get All Users",
+					"name": "List Users",
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
 						"url": {
-							"raw": "{{base_url}}/users",
-							"host": ["{{base_url}}"],
+							"raw": "{{baseUrl}}/users",
+							"host": ["{{baseUrl}}"],
 							"path": ["users"]
 						}
 					}
@@ -26,16 +81,21 @@
 					"name": "Get User by ID",
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
 						"url": {
-							"raw": "{{base_url}}/users/:id",
-							"host": ["{{base_url}}"],
+							"raw": "{{baseUrl}}/users/:id",
+							"host": ["{{baseUrl}}"],
 							"path": ["users", ":id"],
 							"variable": [
 								{
 									"key": "id",
-									"value": "",
-									"description": "User ID"
+									"value": ""
 								}
 							]
 						}
@@ -131,127 +191,391 @@
 			]
 		},
 		{
-			"name": "Operações",
-			"description": "Endpoints for managing operações (trades)",
+			"name": "Assets",
 			"item": [
 				{
-					"name": "Listar Operações",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/operacoes",
-							"host": ["{{base_url}}"],
-							"path": ["operacoes"]
-						}
-					}
-				},
-				{
-					"name": "Buscar Operação por ID",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/operacoes/:id",
-							"host": ["{{base_url}}"],
-							"path": ["operacoes", ":id"],
-							"variable": [
-								{
-									"key": "id",
-									"value": "",
-									"description": "ID da operação"
-								}
-							]
-						}
-					}
-				},
-				{
-					"name": "Criar Operação",
+					"name": "Create Asset",
 					"request": {
 						"method": "POST",
 						"header": [
 							{
-								"key": "Content-Type",
-								"value": "application/json"
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
 							}
 						],
+						"url": {
+							"raw": "{{baseUrl}}/assets",
+							"host": ["{{baseUrl}}"],
+							"path": ["assets"]
+						},
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"tipo\": \"compra\",\n    \"ativo\": \"PETR4\",\n    \"quantidade\": 100,\n    \"preco\": 28.50,\n    \"data\": \"2024-03-20T10:00:00Z\",\n    \"userId\": \"seu-user-id-aqui\"\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/operacoes",
-							"host": ["{{base_url}}"],
-							"path": ["operacoes"]
+							"raw": "{\n    \"ticker\": \"PETR4\",\n    \"type\": \"stock\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
 						}
 					}
 				},
 				{
-					"name": "Atualizar Operação",
+					"name": "List Assets",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/assets",
+							"host": ["{{baseUrl}}"],
+							"path": ["assets"]
+						}
+					}
+				},
+				{
+					"name": "Get Asset by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/assets/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["assets", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Update Asset",
 					"request": {
 						"method": "PUT",
 						"header": [
 							{
-								"key": "Content-Type",
-								"value": "application/json"
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
 							}
 						],
+						"url": {
+							"raw": "{{baseUrl}}/assets/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["assets", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						},
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"tipo\": \"venda\",\n    \"ativo\": \"PETR4\",\n    \"quantidade\": 50,\n    \"preco\": 30.75,\n    \"data\": \"2024-03-21T10:00:00Z\"\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/operacoes/:id",
-							"host": ["{{base_url}}"],
-							"path": ["operacoes", ":id"],
-							"variable": [
-								{
-									"key": "id",
-									"value": "",
-									"description": "ID da operação"
+							"raw": "{\n    \"ticker\": \"PETR4\",\n    \"type\": \"stock\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
 								}
-							]
+							}
 						}
 					}
 				},
 				{
-					"name": "Deletar Operação",
+					"name": "Delete Asset",
 					"request": {
 						"method": "DELETE",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
 						"url": {
-							"raw": "{{base_url}}/operacoes/:id",
-							"host": ["{{base_url}}"],
-							"path": ["operacoes", ":id"],
+							"raw": "{{baseUrl}}/assets/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["assets", ":id"],
 							"variable": [
 								{
 									"key": "id",
-									"value": "",
-									"description": "ID da operação"
+									"value": ""
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Transactions",
+			"item": [
+				{
+					"name": "Create Transaction",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/transactions",
+							"host": ["{{baseUrl}}"],
+							"path": ["transactions"]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"compra\",\n    \"date\": \"2024-05-17T00:00:00Z\",\n    \"quantity\": 100,\n    \"price_per_unit\": 25.50,\n    \"userId\": \"user-id\",\n    \"assetId\": \"asset-id\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					}
+				},
+				{
+					"name": "List Transactions",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/transactions",
+							"host": ["{{baseUrl}}"],
+							"path": ["transactions"]
+						}
+					}
+				},
+				{
+					"name": "Get Transaction by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/transactions/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["transactions", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
 								}
 							]
 						}
 					}
 				},
 				{
-					"name": "Buscar Operações por Período",
+					"name": "Update Transaction",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/transactions/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["transactions", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"compra\",\n    \"date\": \"2024-05-17T00:00:00Z\",\n    \"quantity\": 100,\n    \"price_per_unit\": 25.50\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					}
+				},
+				{
+					"name": "Delete Transaction",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/transactions/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["transactions", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Monthly Taxes",
+			"item": [
+				{
+					"name": "Create Monthly Tax",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/monthly-taxes",
+							"host": ["{{baseUrl}}"],
+							"path": ["monthly-taxes"]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"year\": 2024,\n    \"month\": 5,\n    \"asset_type\": \"stock\",\n    \"total_gain\": 1000.00,\n    \"carried_forward_tax\": 0.00,\n    \"tax_due\": 150.00,\n    \"userId\": \"user-id\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					}
+				},
+				{
+					"name": "List Monthly Taxes",
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
 						"url": {
-							"raw": "{{base_url}}/operacoes/periodo?dataInicio=2024-01-01T00:00:00Z&dataFim=2024-12-31T23:59:59Z",
-							"host": ["{{base_url}}"],
-							"path": ["operacoes", "periodo"],
-							"query": [
+							"raw": "{{baseUrl}}/monthly-taxes",
+							"host": ["{{baseUrl}}"],
+							"path": ["monthly-taxes"]
+						}
+					}
+				},
+				{
+					"name": "Get Monthly Tax by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/monthly-taxes/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["monthly-taxes", ":id"],
+							"variable": [
 								{
-									"key": "dataInicio",
-									"value": "2024-01-01T00:00:00Z",
-									"description": "Data inicial do período"
-								},
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Update Monthly Tax",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/monthly-taxes/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["monthly-taxes", ":id"],
+							"variable": [
 								{
-									"key": "dataFim",
-									"value": "2024-12-31T23:59:59Z",
-									"description": "Data final do período"
+									"key": "id",
+									"value": ""
+								}
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"year\": 2024,\n    \"month\": 5,\n    \"asset_type\": \"stock\",\n    \"total_gain\": 1000.00,\n    \"carried_forward_tax\": 0.00,\n    \"tax_due\": 150.00\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					}
+				},
+				{
+					"name": "Delete Monthly Tax",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/monthly-taxes/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["monthly-taxes", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
 								}
 							]
 						}
@@ -262,10 +586,8 @@
 	],
 	"variable": [
 		{
-			"key": "base_url",
-			"value": "http://localhost:3000",
-			"type": "string",
-			"description": "Base URL for the API"
+			"key": "baseUrl",
+			"value": "http://localhost:3000"
 		}
 	]
 } 
