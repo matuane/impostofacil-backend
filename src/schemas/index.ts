@@ -11,16 +11,6 @@ export const userSchema = {
     }
 };
 
-export const assetSchema = {
-    type: 'object',
-    properties: {
-        id: { type: 'string', format: 'uuid' },
-        ticker: { type: 'string' },
-        type: { type: 'string' },
-        createdAt: { type: 'string', format: 'date-time' },
-        updatedAt: { type: 'string', format: 'date-time' }
-    }
-};
 
 export const transactionSchema = {
     type: 'object',
@@ -33,6 +23,18 @@ export const transactionSchema = {
         total_value: { type: 'number', format: 'float', minimum: 0 },
         userId: { type: 'string', format: 'uuid' },
         assetId: { type: 'string', format: 'uuid' },
+        createdAt: { type: 'string', format: 'date-time' },
+        updatedAt: { type: 'string', format: 'date-time' }
+    }
+};
+
+export const assetSchema = {
+    type: 'object',
+    properties: {
+        id: { type: 'string', format: 'uuid' },
+        ticker: { type: 'string' },
+        type: { type: 'string' },
+        transactions: { type: 'array', items: transactionSchema },
         createdAt: { type: 'string', format: 'date-time' },
         updatedAt: { type: 'string', format: 'date-time' }
     }

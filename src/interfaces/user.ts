@@ -17,8 +17,7 @@ export interface CreateUserInput {
  * @property {string} [refreshToken] - Novo token de refresh
  */
 export interface UpdateUserInput {
-    email?: string;
-    password?: string;
+    name?: string;
     refreshToken?: string;
 }
 
@@ -33,4 +32,21 @@ export interface User {
     isAdmin: boolean;
     createdAt: Date;
     updatedAt: Date;
+}
+
+/**
+ * Interface para filtros de busca de usuários
+ */
+export interface UserFilters {
+    email?: string;
+    name?: string;
+}
+
+/**
+ * Interface para dados de atualização de usuário
+ */
+export interface UpdateUserInput {
+    email?: string;
+    name?: string;
+    password?: string;
 }

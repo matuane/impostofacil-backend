@@ -1,28 +1,54 @@
 import { PrismaClient } from '@prisma/client';
 import prisma from '../lib/prisma';
-
-export interface AssetFilters {
-    ticker?: string;
-    type?: string;
-}
-
-export interface CreateAssetInput {
-    ticker: string;
-    type: string;
-}
-
-export interface UpdateAssetInput {
-    ticker?: string;
-    type?: string;
-}
+import { MonthlyTaxService } from './MonthlyTaxService';
+import { AssetFilters, CreateAssetInput, UpdateAssetInput } from '../interfaces/assets';
 
 export class AssetService {
-    async create(data: CreateAssetInput) {
-        return (prisma as any).assets.create({
-            data,
-            include: {
-                transactions: true
+    async create(data: Partial<CreateAssetInput>) {
+        const taxService = new MonthlyTaxService();
+        return await prisma.$transaction(async (prisma) => {
+            // Cria o ativo
+            const asset = await prisma.asset.create({
+                data: {
+                    ticker: data.ticker!,
+                    type: data.type!
+                }
+            });
+
+            // Cria a transação inicial
+            const transaction = await prisma.transaction.create({
+                data: {
+                    type: data.transactionType!,
+                    date: new Date(),
+                    quantity: data.quantity!,
+                    price_per_unit: data.price_per_unit!,
+                    total_value: data.quantity! * data.price_per_unit!,
+                    userId: data.userId!,
+                    assetId: asset.id
+                }
+            });
+
+            if(data.transactionType === 'venda') {
+                await taxService.calculateTaxForSale({
+                    id: transaction.id,
+                    type: data.transactionType!,
+                    date: transaction.date,
+                    quantity: transaction.quantity,
+                    price_per_unit: Number(transaction.price_per_unit),
+                    total_value: Number(transaction.total_value),
+                    assetId: asset.id,
+                    userId: data.userId!,
+                    assetType: asset.type,
+                    assetName: asset.ticker
+                });
             }
+
+            return {
+                ...asset,
+                transactions: [transaction]
+            };
+        }, {
+            timeout: 30000 // 30 segundos
         });
     }
 
@@ -36,7 +62,7 @@ export class AssetService {
             where.type = { contains: filters.type };
         }
 
-        return (prisma as any).assets.findMany({
+        return await prisma.asset.findMany({
             where,
             include: {
                 transactions: true
@@ -45,7 +71,7 @@ export class AssetService {
     }
 
     async findById(id: string) {
-        return (prisma as any).assets.findUnique({
+        return await prisma.asset.findUnique({
             where: { id },
             include: {
                 transactions: true
@@ -54,7 +80,7 @@ export class AssetService {
     }
 
     async update(id: string, data: UpdateAssetInput) {
-        return (prisma as any).assets.update({
+        return await prisma.asset.update({
             where: { id },
             data,
             include: {
@@ -64,8 +90,16 @@ export class AssetService {
     }
 
     async delete(id: string) {
-        return (prisma as any).assets.delete({
-            where: { id }
+        return await prisma.$transaction(async (prisma) => {
+            // Primeiro deleta todas as transações relacionadas
+            await prisma.transaction.deleteMany({
+                where: { assetId: id }
+            });
+
+            // Depois deleta o ativo
+            return await prisma.asset.delete({
+                where: { id: id }
+            });
         });
     }
 } 

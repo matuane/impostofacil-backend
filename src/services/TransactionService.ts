@@ -1,35 +1,13 @@
 import { PrismaClient } from '@prisma/client';
 import prisma from '../lib/prisma';
+import { CreateTransactionInput, TransactionFilters, UpdateTransactionInput } from '../interfaces/transactions';
 
-export interface TransactionFilters {
-    type?: string;
-    userId?: string;
-    assetId?: string;
-}
-
-export interface CreateTransactionInput {
-    type: string;
-    date: Date;
-    quantity: number;
-    price_per_unit: number;
-    total_value?: number;
-    userId: string;
-    assetId: string;
-}
-
-export interface UpdateTransactionInput {
-    type?: string;
-    date?: Date;
-    quantity?: number;
-    price_per_unit?: number;
-    total_value?: number;
-}
 
 export class TransactionService {
     async create(data: CreateTransactionInput) {
         const total_value = data.quantity * Number(data.price_per_unit);
         
-        return (prisma as any).transaction.create({
+        return prisma.transaction.create({
             data: {
                 type: data.type,
                 date: data.date,
@@ -65,13 +43,13 @@ export class TransactionService {
             where.assetId = filters.assetId;
         }
 
-        return (prisma as any).transaction.findMany({
+        return prisma.transaction.findMany({
             where
         });
     }
 
     async findById(id: string) {
-        return (prisma as any).transaction.findUnique({
+        return prisma.transaction.findUnique({
             where: { id }
         });
     }
@@ -84,17 +62,44 @@ export class TransactionService {
                 ...updateData,
                 total_value: data.quantity * Number(data.price_per_unit)
             };
+        } else if (data.quantity) {
+            const transaction = await prisma.transaction.findUnique({
+                where: { id }
+            });
+            if (transaction) {
+                updateData.total_value = (data.quantity * Number(transaction.price_per_unit));
+            }
+        } else if (data.price_per_unit) {
+            const transaction = await prisma.transaction.findUnique({
+                where: { id }
+            });
+            if (transaction) {
+                updateData.total_value = (transaction.quantity * Number(data.price_per_unit));
+            }
         }
-
-        return (prisma as any).transaction.update({
+        return prisma.transaction.update({
             where: { id },
             data: updateData
         });
     }
 
     async delete(id: string) {
-        return (prisma as any).transaction.delete({
-            where: { id }
+        return await prisma.$transaction(async (prisma) => {
+
+            const transaction = await prisma.transaction.findUnique({
+                where: { id }
+            });
+            
+
+            // Primeiro deleta o ativo
+            await prisma.transaction.delete({
+                where: { id }
+            });
+
+            // Depois deleta todas as transações relacionadas
+            return await prisma.asset.delete({
+                where: { id: transaction?.assetId }
+            });
         });
     }
 } 

@@ -1,24 +1,12 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
-import { TransactionService, TransactionFilters, CreateTransactionInput, UpdateTransactionInput } from '../services/TransactionService';
+import { TransactionService } from '../services/TransactionService';
+import { TransactionFilters, UpdateTransactionInput } from '../interfaces/transactions';
 
 export class TransactionController {
     private transactionService: TransactionService;
 
     constructor() {
         this.transactionService = new TransactionService();
-    }
-
-    async create(request: FastifyRequest, reply: FastifyReply) {
-        try {
-            const data = request.body as CreateTransactionInput;
-            const transaction = await this.transactionService.create(data);
-            return reply.status(201).send(transaction);
-        } catch (error) {
-            console.error('Erro ao criar transação:', error);
-            return reply.status(500).send({
-                error: 'Erro interno do servidor ao criar transação'
-            });
-        }
     }
 
     async findAll(request: FastifyRequest, reply: FastifyReply) {

@@ -1,4 +1,4 @@
-import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
+import { FastifyReply, FastifyRequest } from "fastify";
 import { AuthService } from "../services/AuthService";
 
 export class AuthController {
@@ -13,8 +13,11 @@ export class AuthController {
         try {
             this.service = new AuthService();
 
-            const { email, password } = request.body as { email: string; password: string };
-            const user = await this.service.register(email, password);
+            const { email, password, name } = request.body as { email: string; password: string; name: string };
+            if(!email || !password || !name) {
+                return reply.status(400).send({ error: "Email, senha e nome são obrigatórios" });
+            }
+            const user = await this.service.register(email, password, name);
             return reply.status(201).send({
                 user: {
                     id: user.id,
@@ -74,11 +77,62 @@ export class AuthController {
     public async logout(request: FastifyRequest, reply: FastifyReply) {
         try {
             this.service = new AuthService();
-            const userId = request.user.id;
-            await this.service.logout(userId);
+            // Verifica se o usuário está autenticado e tem um ID válido
+            if (!request.user || !request.user.id) {
+                return reply.status(401).send({ 
+                    error: "Usuário não autenticado" 
+                });
+            }
+
+            await this.service.logout(request.user.id);
             return reply.status(204).send();
         } catch (error: any) {
-            return reply.status(500).send({ error: "Erro ao fazer logout" });
+            console.error('Erro ao fazer logout:', error);
+            return reply.status(500).send({ 
+                error: "Erro ao fazer logout" 
+            });
+        }
+    }
+
+    // Change Password
+    public async changePassword(request: FastifyRequest, reply: FastifyReply) {
+        try {
+            this.service = new AuthService();
+            
+            // Verifica se o usuário está autenticado
+            if (!request.user || !request.user.id) {
+                return reply.status(401).send({ 
+                    error: "Usuário não autenticado" 
+                });
+            }
+
+            const { newPassword } = request.body as { 
+                newPassword: string 
+            };
+
+            if (!newPassword) {
+                return reply.status(400).send({ 
+                    error: "Senha atual e nova senha são obrigatórias" 
+                });
+            }
+
+            const result = await this.service.changePassword(
+                request.user.id,
+                newPassword
+            );
+
+            return reply.send(result);
+        } catch (error: any) {
+            if (error.message === "Sua nova senha deve ser diferente da senha atual") {
+                return reply.status(400).send({ error: error.message });
+            }
+            if (error.message === "Usuário não encontrado") {
+                return reply.status(404).send({ error: error.message });
+            }
+            console.error('Erro ao alterar senha:', error);
+            return reply.status(500).send({ 
+                error: "Erro ao alterar senha" 
+            });
         }
     }
 } 

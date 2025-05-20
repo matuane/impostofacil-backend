@@ -1,34 +1,141 @@
+import { CreateMonthlyTaxInput, MonthlyTaxFilters, Transaction, UpdateMonthlyTaxInput } from '../interfaces/MonthlyTax';
 import prisma from '../lib/prisma';
 
-export interface MonthlyTaxFilters {
-    year?: number;
-    month?: number;
-    userId?: string;
-    asset_type?: string;
-}
-
-export interface CreateMonthlyTaxInput {
-    year: number;
-    month: number;
-    asset_type: string;
-    total_gain: number;
-    carried_forward_tax: number;
-    tax_due: number;
-    userId: string;
-}
-
-export interface UpdateMonthlyTaxInput {
-    year?: number;
-    month?: number;
-    asset_type?: string;
-    total_gain?: number;
-    carried_forward_tax?: number;
-    tax_due?: number;
-}
-
 export class MonthlyTaxService {
+    async calculateTaxForSale(transaction: Transaction) {
+
+        if (!transaction || transaction.type !== 'venda') {
+            throw new Error('Transação inválida ou não é uma venda');
+        }
+
+        // Buscar todas as compras do mesmo ativo que ainda não foram totalmente vendidas
+        const buyTransactions = await prisma.transaction.findMany({
+            where: {
+                asset: {
+                    ticker: transaction.assetName
+                },
+                type: 'compra',
+                quantity: {
+                    gt: prisma.transaction.fields.ticker_seller
+                }
+            },
+            orderBy: {
+                date: 'asc'
+            }
+        });
+
+        let remainingQuantity = transaction.quantity;
+        let totalCost = 0;
+        let totalQuantity = 0;
+        const updates = [];
+
+        // Calcular média ponderada e preparar atualizações
+        for (const buyTx of buyTransactions) {
+            totalCost += Number(buyTx.price_per_unit);
+
+            // Se não há mais quantidade para vender, para o loop
+            if (remainingQuantity <= 0) continue;
+
+            const availableQuantity = buyTx.quantity - buyTx.ticker_seller;
+            if (availableQuantity <= 0) continue;
+
+            // Garante que não usaremos mais que o disponível
+            const quantityToUse = Math.min(availableQuantity, remainingQuantity);
+            
+            // Atualizar o custo total e quantidade
+            totalQuantity += quantityToUse;
+            
+            // Atualizar a quantidade restante (nunca será negativa devido ao Math.min acima)
+            remainingQuantity -= quantityToUse;
+
+            // Atualizar ticker_seller imediatamente
+            await prisma.transaction.update({
+                where: { id: buyTx.id },
+                data: {
+                    ticker_seller: buyTx.ticker_seller + quantityToUse
+                }
+            });
+        }
+
+        // Se ainda houver quantidade restante, significa que não havia compras suficientes
+        if (remainingQuantity > 0) {
+            throw new Error('Quantidade de venda maior que a quantidade disponível em compras');
+        }
+
+        const averageCost = totalQuantity > 0 ? totalCost / buyTransactions.length : 0;
+        const totalSaleValue = Number(transaction.total_value);
+        const totalGain = totalSaleValue - (averageCost * transaction.quantity);
+
+        // Buscar todas as vendas do mesmo ativo no mesmo mês
+        const monthSales = await prisma.transaction.findMany({
+            where: {
+                asset: {
+                    ticker: transaction.assetName
+                },
+                type: 'venda',
+                date: {
+                    gte: new Date(transaction.date.getFullYear(), transaction.date.getMonth(), 1),
+                    lt: new Date(transaction.date.getFullYear(), transaction.date.getMonth() + 1, 1)
+                }
+            }
+        });
+
+        // Calcular o valor total vendido no mês
+        const totalMonthSales = monthSales.reduce((acc, sale) => acc + Number(sale.total_value), 0) + totalSaleValue;
+
+        let taxDue = 0;
+        let carriedForwardTax = 0;
+
+        // Se houver prejuízo, registra para compensação futura
+        if (totalGain < 0) {
+            carriedForwardTax = Math.abs(totalGain);
+        } else {
+            // Buscar prejuízos anteriores do mesmo ano
+            const previousLosses = await prisma.monthlyTax.findMany({
+                where: {
+                    userId: transaction.userId,
+                    year: transaction.date.getFullYear(),
+                    month: {
+                        lt: transaction.date.getMonth() + 1
+                    },
+                    total_gain: {
+                        lt: 0
+                    }
+                }
+            });
+
+            // Calcular o total de prejuízos a compensar
+            const totalLosses = previousLosses.reduce((acc: number, loss) => 
+                acc + Math.abs(Number(loss.total_gain)), 0);
+            const gainAfterCompensation = Math.max(0, totalGain - totalLosses);
+
+            if (transaction.assetType === 'acao') {
+                // Para ações: 15% se venda mensal > 20k e houver lucro
+                if (totalMonthSales > 20000 && gainAfterCompensation > 0) {
+                    taxDue = gainAfterCompensation * 0.15;
+                }
+            } else if (transaction.assetType === 'fii') {
+                // Para FIIs: 20% sobre o lucro
+                if (gainAfterCompensation > 0) {
+                    taxDue = gainAfterCompensation * 0.20;
+                }
+            }
+        }
+
+        // Criar registro de imposto
+        return this.create({
+            year: transaction.date.getFullYear(),
+            month: transaction.date.getMonth() + 1,
+            asset_type: transaction.assetType,
+            total_gain: totalGain,
+            carried_forward_tax: carriedForwardTax,
+            tax_due: taxDue,
+            userId: transaction.userId
+        });
+    }
+
     async create(data: CreateMonthlyTaxInput) {
-        return (prisma as any).monthly_taxes.create({
+        return prisma.monthlyTax.create({
             data,
             include: {
                 user: {
@@ -58,7 +165,7 @@ export class MonthlyTaxService {
             where.asset_type = filters.asset_type;
         }
 
-        return (prisma as any).monthly_taxes.findMany({
+        return prisma.monthlyTax.findMany({
             where,
             include: {
                 user: {
@@ -73,7 +180,7 @@ export class MonthlyTaxService {
     }
 
     async findById(id: string) {
-        return (prisma as any).monthly_taxes.findUnique({
+        return prisma.monthlyTax.findUnique({
             where: { id },
             include: {
                 user: {
@@ -88,7 +195,7 @@ export class MonthlyTaxService {
     }
 
     async update(id: string, data: UpdateMonthlyTaxInput) {
-        return (prisma as any).monthly_taxes.update({
+        return prisma.monthlyTax.update({
             where: { id },
             data,
             include: {
@@ -104,7 +211,7 @@ export class MonthlyTaxService {
     }
 
     async delete(id: string) {
-        return (prisma as any).monthly_taxes.delete({
+        return prisma.monthlyTax.delete({
             where: { id }
         });
     }

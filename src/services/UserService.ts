@@ -1,22 +1,7 @@
+import { UpdateUserInput, UserFilters } from '../interfaces/user';
 import prisma  from '../lib/prisma';
-import { hash } from 'bcrypt';
 
-/**
- * Interface para filtros de busca de usuários
- */
-export interface UserFilters {
-    email?: string;
-    name?: string;
-}
 
-/**
- * Interface para dados de atualização de usuário
- */
-export interface UpdateUserInput {
-    email?: string;
-    name?: string;
-    password?: string;
-}
 
 /**
  * Serviço responsável pela lógica de negócio relacionada a usuários
@@ -50,6 +35,13 @@ export class UserService {
         });
     }
 
+    async getUserPassword(id: string) {
+        return (prisma as any).user.findUnique({
+            where: { id },
+            select: { password: true }
+        });
+    }
+
     /**
      * Busca um usuário pelo ID
      * @param id ID do usuário
@@ -76,11 +68,6 @@ export class UserService {
      * @returns Usuário atualizado
      */
     async update(id: string, data: UpdateUserInput) {
-        if (data.password) {
-            const hashedPassword = await hash(data.password, 8);
-            data = { ...data, password: hashedPassword };
-            delete data.password;
-        }
 
         return (prisma as any).user.update({
             where: { id },

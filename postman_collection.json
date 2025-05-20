@@ -1,132 +1,318 @@
 {
 	"info": {
-		"_postman_id": "b0e7b0a0-0b0a-4b0a-8b0a-0b0a0b0a0b0a",
+		"_postman_id": "22a77041-2ec2-4a5d-8403-1d6f57c27572",
 		"name": "ImpostoFacil API",
-		"description": "Collection for ImpostoFacil API endpoints",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"description": "API para gerenciamento de impostos sobre investimentos",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31386392"
 	},
 	"item": [
 		{
 			"name": "Auth",
-			"description": "Authentication endpoints",
 			"item": [
 				{
-					"name": "Login",
+					"name": "Register",
 					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/auth/login",
-							"host": ["{{baseUrl}}"],
-							"path": ["auth", "login"]
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImM4OTQwMmJkLWYxMDEtNDE4Yy05Yzg5LTQ3MzBiNWUwZDA4NiIsImlhdCI6MTc0NzY1ODEzMSwiZXhwIjoxNzQ3NjYxNzMxfQ.Bff8_K0DZU0hyGl4TitrncFIcotVBu0weLPpfvjY6Tg",
+									"type": "string"
+								}
+							]
 						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"user@example.com\",\n    \"password\": \"password123\"\n}",
+							"raw": "{\n    \"email\": \"mateus_antuae@hotmail.com\",\n    \"password\": \"123456\",\n    \"name\": \"Mateus Antuane\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						},
+						"description": "Registra um novo usuário no sistema"
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const json = pm.response.json()",
+									"",
+									"if (json.accessToken) {",
+									"  pm.environment.set(\"access_token\", json.accessToken)",
+									"  console.log(\"Token salvo com sucesso:\", json.accessToken)",
+									"} else {",
+									"  console.warn(\"accessToken não encontrado na resposta!\")",
+									"}",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "mateus_antuane@hotmail.com",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "123456",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						},
+						"description": "Autentica um usuário e retorna um token JWT"
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZkZTE3NTQ5LWE0Y2UtNDhmMS1hMjdmLWE1MjAzMWUzMmRjNyIsImlhdCI6MTc0NzY2MjAyMSwiZXhwIjoxNzQ3NjY1NjIxfQ.BORqe9Uc8unlH1E6lTrhgp5VSi6U9UaC-I1acyPPyMg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/auth/logout",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"logout"
+							]
+						},
+						"description": "Realiza o logout do usuário, invalidando o token atual"
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{refresh_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refreshToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZkZTE3NTQ5LWE0Y2UtNDhmMS1hMjdmLWE1MjAzMWUzMmRjNyIsImlhdCI6MTc0NzY2NDc1MywiZXhwIjoxNzQ4MjY5NTUzfQ.KtuQTX2CBmiC3-G-oEuDBDIvw94pMVa_HXMNe8JMPKM\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
 								}
 							}
-						}
-					}
-				},
-				{
-					"name": "Register",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"email\": \"newuser@example.com\",\n    \"password\": \"yourpassword\"\n}"
 						},
 						"url": {
-							"raw": "{{base_url}}/auth/register",
-							"host": ["{{base_url}}"],
-							"path": ["auth", "register"]
+							"raw": "{{base_url}}/auth/refresh",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"refresh"
+							]
 						},
-						"description": "Register a new user"
-					}
+						"description": "Atualiza o token de acesso usando o refresh token"
+					},
+					"response": []
+				},
+				{
+					"name": "Change Password",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZkZTE3NTQ5LWE0Y2UtNDhmMS1hMjdmLWE1MjAzMWUzMmRjNyIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NDc2ODE0OTgsImV4cCI6MTc0NzY4NTA5OH0.6l14-IZhnfjIE6ZK9T2hx1bFiu9sExDhtsXp9zdX6Lo",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"newPassword\": \"123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/change-password",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"change-password"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
 		{
 			"name": "Users",
-			"description": "Endpoints for managing users",
 			"item": [
 				{
 					"name": "List Users",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZkZTE3NTQ5LWE0Y2UtNDhmMS1hMjdmLWE1MjAzMWUzMmRjNyIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NDc2Nzg1NjYsImV4cCI6MTc0NzY4MjE2Nn0.153_KsG3zkZSDffE0UL1f3sXshZewZsKzr7OHU3-570",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{token}}",
-								"type": "text"
+								"value": "Bearer {{token}}"
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/users",
-							"host": ["{{baseUrl}}"],
-							"path": ["users"]
-						}
-					}
+							"raw": "{{base_url}}/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users"
+							]
+						},
+						"description": "Lista todos os usuários com filtros opcionais"
+					},
+					"response": []
 				},
 				{
 					"name": "Get User by ID",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZkZTE3NTQ5LWE0Y2UtNDhmMS1hMjdmLWE1MjAzMWUzMmRjNyIsImlhdCI6MTc0NzY2NDc1MywiZXhwIjoxNzQ4MjY5NTUzfQ.KtuQTX2CBmiC3-G-oEuDBDIvw94pMVa_HXMNe8JMPKM",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{token}}",
-								"type": "text"
+								"value": "Bearer {{token}}"
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/users/:id",
-							"host": ["{{baseUrl}}"],
-							"path": ["users", ":id"],
+							"raw": "{{base_url}}/users/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								":id"
+							],
 							"variable": [
 								{
 									"key": "id",
-									"value": ""
+									"value": "c89402bd-f101-418c-9c89-4730b5e0d086",
+									"description": "ID do usuário"
 								}
 							]
-						}
-					}
-				},
-				{
-					"name": "Create User",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"email\": \"user@example.com\",\n    \"password\": \"yourpassword\"\n}"
 						},
-						"url": {
-							"raw": "{{base_url}}/users",
-							"host": ["{{base_url}}"],
-							"path": ["users"]
-						}
-					}
+						"description": "Busca um usuário pelo ID"
+					},
+					"response": []
 				},
 				{
 					"name": "Update User",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImM4OTQwMmJkLWYxMDEtNDE4Yy05Yzg5LTQ3MzBiNWUwZDA4NiIsImlhdCI6MTc0NzY3Njc5NywiZXhwIjoxNzQ3NjgwMzk3fQ.B93HMphYCHVO0jArpcdUCddzsxuVEobKkYGk-4X2p-g",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PUT",
 						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
 							{
 								"key": "Content-Type",
 								"value": "application/json"
@@ -134,59 +320,69 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"updated@example.com\",\n    \"password\": \"newpassword\"\n}"
+							"raw": "{\n    \"name\": \"Nome de teste\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/users/:id",
-							"host": ["{{base_url}}"],
-							"path": ["users", ":id"],
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								":id"
+							],
 							"variable": [
 								{
 									"key": "id",
-									"value": "",
-									"description": "User ID"
+									"value": "c89402bd-f101-418c-9c89-4730b5e0d086",
+									"description": "ID do usuário"
 								}
 							]
-						}
-					}
+						},
+						"description": "Atualiza os dados de um usuário"
+					},
+					"response": []
 				},
 				{
 					"name": "Delete User",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImM4OTQwMmJkLWYxMDEtNDE4Yy05Yzg5LTQ3MzBiNWUwZDA4NiIsImlhdCI6MTc0NzY3NzM4MSwiZXhwIjoxNzQ3NjgwOTgxfQ.hm6s6lltx2wZ4ZF0CtIQCVwgjqPCw5hLp601Mx3ySqo",
+									"type": "string"
+								}
+							]
+						},
 						"method": "DELETE",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
 						"url": {
 							"raw": "{{base_url}}/users/:id",
-							"host": ["{{base_url}}"],
-							"path": ["users", ":id"],
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								":id"
+							],
 							"variable": [
 								{
 									"key": "id",
-									"value": "",
-									"description": "User ID"
+									"value": "e16c5bf3-5b4e-4b7b-938b-ee69b7d15d49",
+									"description": "ID do usuário"
 								}
 							]
-						}
-					}
-				},
-				{
-					"name": "Get User by Email",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/users/email/:email",
-							"host": ["{{base_url}}"],
-							"path": ["users", "email", ":email"],
-							"variable": [
-								{
-									"key": "email",
-									"value": "",
-									"description": "User email"
-								}
-							]
-						}
-					}
+						},
+						"description": "Remove um usuário do sistema"
+					},
+					"response": []
 				}
 			]
 		},
@@ -195,129 +391,238 @@
 			"item": [
 				{
 					"name": "Create Asset",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const token = pm.environment.get(\"access_token\")",
+									"",
+									"if (token) {",
+									"  pm.request.headers.upsert({",
+									"    key: 'Authorization',",
+									"    value: `Bearer ${token}`",
+									"  })",
+									"}",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZkZTE3NTQ5LWE0Y2UtNDhmMS1hMjdmLWE1MjAzMWUzMmRjNyIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NDc3NTY0MzAsImV4cCI6MTc0Nzc2MDAzMH0.ohfObHJW-BkN02y604hbPOPfZNFzqUG3KITld8QlCJk",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{token}}",
-								"type": "text"
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
 							}
 						],
-						"url": {
-							"raw": "{{baseUrl}}/assets",
-							"host": ["{{baseUrl}}"],
-							"path": ["assets"]
-						},
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"ticker\": \"PETR4\",\n    \"type\": \"stock\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						}
-					}
+							"raw": "{\n    \"ticker\": \"VINO11\",\n    \"type\": \"fii\",// 'acao' or 'fii'\n    \"quantity\": 4,\n    \"price_per_unit\": 35,\n    \"transactionType\": \"venda\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/assets",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"assets"
+							]
+						},
+						"description": "Cria um novo ativo"
+					},
+					"response": []
 				},
 				{
 					"name": "List Assets",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZkZTE3NTQ5LWE0Y2UtNDhmMS1hMjdmLWE1MjAzMWUzMmRjNyIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NDc2ODM3MDUsImV4cCI6MTc0NzY4NzMwNX0.wF97vodqmQdyzTuxOiIpy2ZmBO6FJIX-H5ifC27OBSY",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{token}}",
-								"type": "text"
+								"value": "Bearer {{token}}"
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/assets",
-							"host": ["{{baseUrl}}"],
-							"path": ["assets"]
-						}
-					}
+							"raw": "{{base_url}}/assets",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"assets"
+							]
+						},
+						"description": "Lista todos os ativos"
+					},
+					"response": []
 				},
 				{
 					"name": "Get Asset by ID",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZkZTE3NTQ5LWE0Y2UtNDhmMS1hMjdmLWE1MjAzMWUzMmRjNyIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NDc2ODM3MDUsImV4cCI6MTc0NzY4NzMwNX0.wF97vodqmQdyzTuxOiIpy2ZmBO6FJIX-H5ifC27OBSY",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{token}}",
-								"type": "text"
+								"value": "Bearer {{token}}"
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/assets/:id",
-							"host": ["{{baseUrl}}"],
-							"path": ["assets", ":id"],
+							"raw": "{{base_url}}/assets/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"assets",
+								":id"
+							],
 							"variable": [
 								{
 									"key": "id",
-									"value": ""
+									"value": "f7a1b06b-bd33-4462-8c91-72dcadf1e16e",
+									"description": "ID do ativo"
 								}
 							]
-						}
-					}
+						},
+						"description": "Busca um ativo pelo ID"
+					},
+					"response": []
 				},
 				{
 					"name": "Update Asset",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZkZTE3NTQ5LWE0Y2UtNDhmMS1hMjdmLWE1MjAzMWUzMmRjNyIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NDc2ODM3MDUsImV4cCI6MTc0NzY4NzMwNX0.wF97vodqmQdyzTuxOiIpy2ZmBO6FJIX-H5ifC27OBSY",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PUT",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{token}}",
-								"type": "text"
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"ticker\": \"PETR4\",\n    \"type\": \"fii\"\n}"
+						},
 						"url": {
-							"raw": "{{baseUrl}}/assets/:id",
-							"host": ["{{baseUrl}}"],
-							"path": ["assets", ":id"],
+							"raw": "{{base_url}}/assets/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"assets",
+								":id"
+							],
 							"variable": [
 								{
 									"key": "id",
-									"value": ""
+									"value": "f7a1b06b-bd33-4462-8c91-72dcadf1e16e",
+									"description": "ID do ativo"
 								}
 							]
 						},
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"ticker\": \"PETR4\",\n    \"type\": \"stock\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						}
-					}
+						"description": "Atualiza um ativo existente"
+					},
+					"response": []
 				},
 				{
 					"name": "Delete Asset",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZkZTE3NTQ5LWE0Y2UtNDhmMS1hMjdmLWE1MjAzMWUzMmRjNyIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NDc2ODM3MDUsImV4cCI6MTc0NzY4NzMwNX0.wF97vodqmQdyzTuxOiIpy2ZmBO6FJIX-H5ifC27OBSY",
+									"type": "string"
+								}
+							]
+						},
 						"method": "DELETE",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{token}}",
-								"type": "text"
+								"value": "Bearer {{access_token}}"
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/assets/:id",
-							"host": ["{{baseUrl}}"],
-							"path": ["assets", ":id"],
+							"raw": "{{base_url}}/assets/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"assets",
+								":id"
+							],
 							"variable": [
 								{
 									"key": "id",
-									"value": ""
+									"value": "f7a1b06b-bd33-4462-8c91-72dcadf1e16e",
+									"description": "ID do ativo"
 								}
 							]
-						}
-					}
+						},
+						"description": "Remove um ativo"
+					},
+					"response": []
 				}
 			]
 		},
@@ -325,130 +630,188 @@
 			"name": "Transactions",
 			"item": [
 				{
-					"name": "Create Transaction",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseUrl}}/transactions",
-							"host": ["{{baseUrl}}"],
-							"path": ["transactions"]
-						},
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"type\": \"compra\",\n    \"date\": \"2024-05-17T00:00:00Z\",\n    \"quantity\": 100,\n    \"price_per_unit\": 25.50,\n    \"userId\": \"user-id\",\n    \"assetId\": \"asset-id\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						}
-					}
-				},
-				{
 					"name": "List Transactions",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZkZTE3NTQ5LWE0Y2UtNDhmMS1hMjdmLWE1MjAzMWUzMmRjNyIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NDc2ODgyNTUsImV4cCI6MTc0NzY5MTg1NX0.VhfkOSnNTZUaoR8vvNPWwRQ4xA2tx-L501KruxOccHI",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{token}}",
-								"type": "text"
+								"value": "Bearer {{token}}"
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/transactions",
-							"host": ["{{baseUrl}}"],
-							"path": ["transactions"]
-						}
-					}
+							"raw": "{{base_url}}/transactions",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"transactions"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "compra",
+									"description": "Tipo da transação (compra/venda)",
+									"disabled": true
+								},
+								{
+									"key": "userId",
+									"value": "fde17549-a4ce-48f1-a27f-a52031e32dc7",
+									"description": "ID do usuário",
+									"disabled": true
+								},
+								{
+									"key": "assetId",
+									"value": "95afa043-521c-4170-9ec8-189b9525230c",
+									"description": "ID do ativo",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Lista todas as transações com filtros opcionais"
+					},
+					"response": []
 				},
 				{
 					"name": "Get Transaction by ID",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZkZTE3NTQ5LWE0Y2UtNDhmMS1hMjdmLWE1MjAzMWUzMmRjNyIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NDc2ODgyNTUsImV4cCI6MTc0NzY5MTg1NX0.VhfkOSnNTZUaoR8vvNPWwRQ4xA2tx-L501KruxOccHI",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{token}}",
-								"type": "text"
+								"value": "Bearer {{token}}"
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/transactions/:id",
-							"host": ["{{baseUrl}}"],
-							"path": ["transactions", ":id"],
+							"raw": "{{base_url}}/transactions/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"transactions",
+								":id"
+							],
 							"variable": [
 								{
 									"key": "id",
-									"value": ""
+									"value": "d18e4f46-6a5c-434a-82b4-a674cf1d9c2f",
+									"description": "ID da transação"
 								}
 							]
-						}
-					}
+						},
+						"description": "Busca uma transação pelo ID"
+					},
+					"response": []
 				},
 				{
 					"name": "Update Transaction",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZkZTE3NTQ5LWE0Y2UtNDhmMS1hMjdmLWE1MjAzMWUzMmRjNyIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NDc2ODgyNTUsImV4cCI6MTc0NzY5MTg1NX0.VhfkOSnNTZUaoR8vvNPWwRQ4xA2tx-L501KruxOccHI",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PUT",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{token}}",
-								"type": "text"
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"venda\",\n    \"date\": \"2024-03-21T10:00:00Z\",\n    \"quantity\": 50,\n    \"price_per_unit\": 26.00\n}"
+						},
 						"url": {
-							"raw": "{{baseUrl}}/transactions/:id",
-							"host": ["{{baseUrl}}"],
-							"path": ["transactions", ":id"],
+							"raw": "{{base_url}}/transactions/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"transactions",
+								":id"
+							],
 							"variable": [
 								{
 									"key": "id",
-									"value": ""
+									"value": "transaction-uuid",
+									"description": "ID da transação"
 								}
 							]
 						},
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"type\": \"compra\",\n    \"date\": \"2024-05-17T00:00:00Z\",\n    \"quantity\": 100,\n    \"price_per_unit\": 25.50\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						}
-					}
+						"description": "Atualiza uma transação existente"
+					},
+					"response": []
 				},
 				{
 					"name": "Delete Transaction",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZkZTE3NTQ5LWE0Y2UtNDhmMS1hMjdmLWE1MjAzMWUzMmRjNyIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NDc3NDA3OTQsImV4cCI6MTc0Nzc0NDM5NH0.KGIXv-K0zALttivXDqZP3N-vNxpHYDDtuVAPl6lIVQo",
+									"type": "string"
+								}
+							]
+						},
 						"method": "DELETE",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{token}}",
-								"type": "text"
+								"value": "Bearer {{token}}"
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/transactions/:id",
-							"host": ["{{baseUrl}}"],
-							"path": ["transactions", ":id"],
+							"raw": "{{base_url}}/transactions/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"transactions",
+								":id"
+							],
 							"variable": [
 								{
 									"key": "id",
-									"value": ""
+									"value": "d18e4f46-6a5c-434a-82b4-a674cf1d9c2f",
+									"description": "ID da transação"
 								}
 							]
-						}
-					}
+						},
+						"description": "Remove uma transação"
+					},
+					"response": []
 				}
 			]
 		},
@@ -456,49 +819,59 @@
 			"name": "Monthly Taxes",
 			"item": [
 				{
-					"name": "Create Monthly Tax",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseUrl}}/monthly-taxes",
-							"host": ["{{baseUrl}}"],
-							"path": ["monthly-taxes"]
-						},
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"year\": 2024,\n    \"month\": 5,\n    \"asset_type\": \"stock\",\n    \"total_gain\": 1000.00,\n    \"carried_forward_tax\": 0.00,\n    \"tax_due\": 150.00,\n    \"userId\": \"user-id\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						}
-					}
-				},
-				{
 					"name": "List Monthly Taxes",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZkZTE3NTQ5LWE0Y2UtNDhmMS1hMjdmLWE1MjAzMWUzMmRjNyIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NDc3NTY0MzAsImV4cCI6MTc0Nzc2MDAzMH0.ohfObHJW-BkN02y604hbPOPfZNFzqUG3KITld8QlCJk",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{token}}",
-								"type": "text"
+								"value": "Bearer {{token}}"
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/monthly-taxes",
-							"host": ["{{baseUrl}}"],
-							"path": ["monthly-taxes"]
-						}
-					}
+							"raw": "{{base_url}}/monthly-taxes?year=2025&month=5&userId=fde17549-a4ce-48f1-a27f-a52031e32dc7&asset_type=fii",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"monthly-taxes"
+							],
+							"query": [
+								{
+									"key": "year",
+									"value": "2025",
+									"description": "Ano do imposto"
+								},
+								{
+									"key": "month",
+									"value": "5",
+									"description": "Mês do imposto (1-12)"
+								},
+								{
+									"key": "userId",
+									"value": "fde17549-a4ce-48f1-a27f-a52031e32dc7",
+									"description": "ID do usuário"
+								},
+								{
+									"key": "asset_type",
+									"value": "fii",
+									"description": "Tipo do ativo"
+								}
+							]
+						},
+						"description": "Lista todos os impostos mensais com filtros opcionais"
+					},
+					"response": []
 				},
 				{
 					"name": "Get Monthly Tax by ID",
@@ -507,22 +880,29 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{token}}",
-								"type": "text"
+								"value": "Bearer {{token}}"
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/monthly-taxes/:id",
-							"host": ["{{baseUrl}}"],
-							"path": ["monthly-taxes", ":id"],
+							"raw": "{{base_url}}/monthly-taxes/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"monthly-taxes",
+								":id"
+							],
 							"variable": [
 								{
 									"key": "id",
-									"value": ""
+									"value": "f63be742-5d07-45f1-a689-7996d7794a84",
+									"description": "ID do imposto mensal"
 								}
 							]
-						}
-					}
+						},
+						"description": "Busca um imposto mensal pelo ID"
+					},
+					"response": []
 				},
 				{
 					"name": "Update Monthly Tax",
@@ -531,31 +911,37 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{token}}",
-								"type": "text"
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"year\": 2024,\n    \"month\": 3,\n    \"asset_type\": \"acao\",\n    \"total_gain\": 1200.00,\n    \"carried_forward_tax\": 0.00,\n    \"tax_due\": 180.00\n}"
+						},
 						"url": {
-							"raw": "{{baseUrl}}/monthly-taxes/:id",
-							"host": ["{{baseUrl}}"],
-							"path": ["monthly-taxes", ":id"],
+							"raw": "{{base_url}}/monthly-taxes/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"monthly-taxes",
+								":id"
+							],
 							"variable": [
 								{
 									"key": "id",
-									"value": ""
+									"value": "8da4672c-b2dd-4215-ba79-bd4d9647e721",
+									"description": "ID do imposto mensal"
 								}
 							]
 						},
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"year\": 2024,\n    \"month\": 5,\n    \"asset_type\": \"stock\",\n    \"total_gain\": 1000.00,\n    \"carried_forward_tax\": 0.00,\n    \"tax_due\": 150.00\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						}
-					}
+						"description": "Atualiza um imposto mensal existente"
+					},
+					"response": []
 				},
 				{
 					"name": "Delete Monthly Tax",
@@ -564,30 +950,76 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{token}}",
-								"type": "text"
+								"value": "Bearer {{token}}"
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/monthly-taxes/:id",
-							"host": ["{{baseUrl}}"],
-							"path": ["monthly-taxes", ":id"],
+							"raw": "{{base_url}}/monthly-taxes/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"monthly-taxes",
+								":id"
+							],
 							"variable": [
 								{
 									"key": "id",
-									"value": ""
+									"value": "323e8f85-cbc6-4533-86c2-37bf8ba57f6b",
+									"description": "ID do imposto mensal"
 								}
 							]
-						}
-					}
+						},
+						"description": "Remove um imposto mensal"
+					},
+					"response": []
 				}
 			]
 		}
 	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"const token = pm.environment.get(\"access_token\")",
+					"",
+					"if (token) {",
+					"  pm.request.headers.upsert({",
+					"    key: 'Authorization',",
+					"    value: `Bearer ${token}`",
+					"  })",
+					"}",
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
 	"variable": [
 		{
-			"key": "baseUrl",
-			"value": "http://localhost:3000"
+			"key": "base_url",
+			"value": "http://localhost:3333",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "your-jwt-token",
+			"type": "string"
+		},
+		{
+			"key": "refresh_token",
+			"value": "your-refresh-token",
+			"type": "string"
 		}
 	]
-} 
+}

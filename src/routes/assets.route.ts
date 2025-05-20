@@ -6,6 +6,13 @@ interface IParams {
     id: string;
 }
 
+// Enum para os tipos de ativos permitidos
+const ASSET_TYPES = ['acao', 'fii'] as const;
+const TRANSACTION_TYPES = ['compra', 'venda'] as const;
+
+type TransactionType = typeof TRANSACTION_TYPES[number];
+type AssetType = typeof ASSET_TYPES[number];
+
 export async function assetRoutes(fastify: FastifyInstance) {
     const assetController = new AssetController();
 
@@ -22,7 +29,11 @@ export async function assetRoutes(fastify: FastifyInstance) {
                 required: ['ticker', 'type'],
                 properties: {
                     ticker: { type: 'string' },
-                    type: { type: 'string' }
+                    type: { 
+                        type: 'string',
+                        enum: ASSET_TYPES,
+                        description: 'Tipo do ativo (acao ou fii)'
+                    }
                 }
             },
             response: {
@@ -39,8 +50,22 @@ export async function assetRoutes(fastify: FastifyInstance) {
                     ...errorSchema
                 }
             }
-        }
+        },
+        onRequest: [fastify.authenticate]
     }, async (request, reply) => {
+        const { transactionType, type } = request.body as { transactionType: string; type: string };
+        if (!TRANSACTION_TYPES.includes(transactionType as TransactionType)) {
+            return reply.status(400).send({
+                error: 'Tipo de transação inválido. Deve ser "compra" ou "venda"'
+            });
+        }
+        
+        if (!ASSET_TYPES.includes(type as AssetType)) {
+            return reply.status(400).send({
+                error: 'Tipo de ativo inválido. Deve ser "acao" ou "fii"'
+            });
+        }
+
         return assetController.create(request, reply);
     });
 

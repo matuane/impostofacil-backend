@@ -1,5 +1,6 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
-import { AssetService, AssetFilters, CreateAssetInput, UpdateAssetInput } from '../services/AssetService';
+import { AssetService } from '../services/AssetService';
+import { AssetFilters, CreateAssetInput, UpdateAssetInput } from '../interfaces/assets';
 
 export class AssetController {
     private assetService: AssetService;
@@ -10,7 +11,13 @@ export class AssetController {
 
     async create(request: FastifyRequest, reply: FastifyReply) {
         try {
-            const data = request.body as CreateAssetInput;
+            const data = request.body as Partial<CreateAssetInput>;
+            if (!request.user || !request.user.id) {
+                return reply.status(401).send({ 
+                    error: "Usuário não autenticado" 
+                });
+            }
+            data.userId = request.user.id;
             const asset = await this.assetService.create(data);
             return reply.status(201).send(asset);
         } catch (error) {

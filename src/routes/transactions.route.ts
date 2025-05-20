@@ -12,41 +12,6 @@ export async function transactionRoutes(fastify: FastifyInstance) {
     // Todas as rotas requerem autenticação
     fastify.addHook('preHandler', fastify.authenticate);
 
-    fastify.post('/', {
-        schema: {
-            tags: ['transactions'],
-            summary: 'Cria uma nova transação',
-            security: [{ bearerAuth: [] }],
-            body: {
-                type: 'object',
-                required: ['type', 'date', 'quantity', 'price_per_unit', 'userId', 'assetId'],
-                properties: {
-                    type: { type: 'string', enum: ['compra', 'venda'] },
-                    date: { type: 'string', format: 'date-time' },
-                    quantity: { type: 'integer', minimum: 1 },
-                    price_per_unit: { type: 'number', format: 'float', minimum: 0 },
-                    userId: { type: 'string', format: 'uuid' },
-                    assetId: { type: 'string', format: 'uuid' }
-                }
-            },
-            response: {
-                201: {
-                    description: 'Transação criada com sucesso',
-                    ...transactionSchema
-                },
-                400: {
-                    description: 'Dados inválidos',
-                    ...errorSchema
-                },
-                500: {
-                    description: 'Erro interno do servidor',
-                    ...errorSchema
-                }
-            }
-        }
-    }, async (request, reply) => {
-        return transactionController.create(request, reply);
-    });
 
     fastify.get('/', {
         schema: {

@@ -1,6 +1,5 @@
-import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
+import { FastifyRequest, FastifyReply } from 'fastify';
 import { UserService } from '../services/UserService';
-import { authenticateToken } from '../middlewares/auth';
 import { UpdateUserInput } from '../interfaces/user';
 
 /**
@@ -81,8 +80,8 @@ export class UserController {
             }
 
             // Verifica se o usuário tem permissão para atualizar
-            const user = request.user as { id: string; isAdmin: boolean };
-            if (user.id !== id && !user.isAdmin) {
+            const user = request.user as { id: string;  };
+            if (user.id !== id ) {
                 return reply.status(403).send({ 
                     error: 'Sem permissão para atualizar este usuário' 
                 });
@@ -117,8 +116,8 @@ export class UserController {
             }
 
             // Verifica se o usuário tem permissão para deletar
-            const user = request.user as { id: string; isAdmin: boolean };
-            if (user.id !== id && !user.isAdmin) {
+            const user = request.user as { id: string; };
+            if (user.id !== id ) {
                 return reply.status(403).send({ 
                     error: 'Sem permissão para deletar este usuário' 
                 });

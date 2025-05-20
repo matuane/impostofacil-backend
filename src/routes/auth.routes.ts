@@ -95,6 +95,44 @@ export async function authRoutes(app: FastifyInstance) {
         }
     }, authController.refreshToken);
 
+    app.post('/change-password', {
+        schema: {
+            tags: ['auth'],
+            summary: 'Altera a senha do usuário',
+            security: [{ bearerAuth: [] }], 
+            body: {
+                type: 'object',
+                required: ['newPassword'],
+                properties: {
+                    newPassword: { type: 'string', minLength: 6 }
+                } 
+            },
+            response: {
+                200: {
+                    description: 'Senha alterada com sucesso',
+                    type: 'null'
+                },
+                401: {
+                    description: 'Token inválido',
+                    ...errorSchema
+                },  
+                404: {
+                    description: 'Usuário não encontrado',
+                    ...errorSchema
+                },
+                400: {
+                    description: 'Senha inválida',
+                    ...errorSchema
+                },
+                500: {
+                    description: 'Erro interno do servidor',
+                    ...errorSchema
+                }
+            }
+        },
+        onRequest: [app.authenticate]
+    }, authController.changePassword);
+
     app.post('/logout', {
         schema: {
             tags: ['auth'],

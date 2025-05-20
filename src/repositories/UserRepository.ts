@@ -1,5 +1,6 @@
 import { CreateUserInput, UpdateUserInput } from '../interfaces/user';
 import prisma from '../lib/prisma';
+import { User } from '../entities/User';
 
 /**
  * Repositório responsável por gerenciar as operações de CRUD de usuários no banco de dados
@@ -80,10 +81,17 @@ export class UserRepository {
      * @param {string} id - ID do usuário
      * @param {string} refreshToken - Novo token de refresh
      */
-    async updateRefreshToken(id: string, refreshToken: string | undefined) {
+    async updateRefreshToken(id: string, refreshToken: string | undefined | null) {
         await prisma.user.update({
             where: { id },
             data: { refreshToken }
+        });
+    }
+
+    async updatePassword(id: string, hashedPassword: string) {
+        return prisma.user.update({
+            where: { id },
+            data: { password: hashedPassword }
         });
     }
 } 

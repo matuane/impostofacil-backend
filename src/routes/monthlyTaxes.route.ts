@@ -12,43 +12,6 @@ export async function monthlyTaxRoutes(fastify: FastifyInstance) {
     // Todas as rotas requerem autenticação
     fastify.addHook('preHandler', fastify.authenticate);
 
-    fastify.post('/', {
-        schema: {
-            tags: ['monthly-taxes'],
-            summary: 'Cria um novo imposto mensal',
-            security: [{ bearerAuth: [] }],
-            body: {
-                type: 'object',
-                required: ['year', 'month', 'asset_type', 'total_gain', 'carried_forward_tax', 'tax_due', 'userId'],
-                properties: {
-                    year: { type: 'integer', minimum: 1900 },
-                    month: { type: 'integer', minimum: 1, maximum: 12 },
-                    asset_type: { type: 'string' },
-                    total_gain: { type: 'number', format: 'float' },
-                    carried_forward_tax: { type: 'number', format: 'float', minimum: 0 },
-                    tax_due: { type: 'number', format: 'float', minimum: 0 },
-                    userId: { type: 'string', format: 'uuid' }
-                }
-            },
-            response: {
-                201: {
-                    description: 'Imposto mensal criado com sucesso',
-                    ...monthlyTaxSchema
-                },
-                400: {
-                    description: 'Dados inválidos',
-                    ...errorSchema
-                },
-                500: {
-                    description: 'Erro interno do servidor',
-                    ...errorSchema
-                }
-            }
-        }
-    }, async (request, reply) => {
-        return monthlyTaxController.create(request, reply);
-    });
-
     fastify.get('/', {
         schema: {
             tags: ['monthly-taxes'],

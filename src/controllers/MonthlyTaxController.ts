@@ -1,5 +1,6 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
-import { MonthlyTaxService, MonthlyTaxFilters, CreateMonthlyTaxInput, UpdateMonthlyTaxInput } from '../services/MonthlyTaxService';
+import { MonthlyTaxService } from '../services/MonthlyTaxService';
+import { MonthlyTaxFilters, UpdateMonthlyTaxInput } from '../interfaces/MonthlyTax';
 
 export class MonthlyTaxController {
     private monthlyTaxService: MonthlyTaxService;
@@ -8,18 +9,6 @@ export class MonthlyTaxController {
         this.monthlyTaxService = new MonthlyTaxService();
     }
 
-    async create(request: FastifyRequest, reply: FastifyReply) {
-        try {
-            const data = request.body as CreateMonthlyTaxInput;
-            const monthlyTax = await this.monthlyTaxService.create(data);
-            return reply.status(201).send(monthlyTax);
-        } catch (error) {
-            console.error('Erro ao criar imposto mensal:', error);
-            return reply.status(500).send({
-                error: 'Erro interno do servidor ao criar imposto mensal'
-            });
-        }
-    }
 
     async findAll(request: FastifyRequest, reply: FastifyReply) {
         try {
