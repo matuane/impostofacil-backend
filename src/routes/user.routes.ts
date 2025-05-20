@@ -19,6 +19,13 @@ export async function userRoutes(app: FastifyInstance) {
             tags: ['users'],
             summary: 'Lista todos os usuários',
             security: [{ bearerAuth: [] }],
+            querystring: {
+                type: 'object',
+                properties: {
+                    email: { type: 'string', format: 'email', nullable: true, },
+                    name: { type: 'string', nullable: true,  }
+                }
+            },
             response: {
                 200: {
                     description: 'Lista de usuários retornada com sucesso',
@@ -75,8 +82,7 @@ export async function userRoutes(app: FastifyInstance) {
             body: {
                 type: 'object',
                 properties: {
-                    email: { type: 'string', format: 'email' },
-                    password: { type: 'string' }
+                    name: { type: 'string' }
                 }
             },
             response: {

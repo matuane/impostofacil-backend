@@ -33,6 +33,15 @@ export async function assetRoutes(fastify: FastifyInstance) {
                         type: 'string',
                         enum: ASSET_TYPES,
                         description: 'Tipo do ativo (acao ou fii)'
+                    },
+                    quantity: {
+                        type: 'number'
+                    },
+                    price_per_unit: {
+                        type: 'number'
+                    },
+                    transactionType: {
+                        type: 'string'
                     }
                 }
             },

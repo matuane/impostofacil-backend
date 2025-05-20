@@ -1,9 +1,17 @@
 import { CreateMonthlyTaxInput, MonthlyTaxFilters, Transaction, UpdateMonthlyTaxInput } from '../interfaces/MonthlyTax';
 import prisma from '../lib/prisma';
 
+/**
+ * Serviço responsável por gerenciar os impostos mensais sobre operações financeiras
+ */
 export class MonthlyTaxService {
+    /**
+     * Calcula o imposto devido para uma operação de venda
+     * @param transaction - Transação de venda para cálculo do imposto
+     * @returns Registro de imposto criado
+     * @throws Error se a transação for inválida ou não for uma venda
+     */
     async calculateTaxForSale(transaction: Transaction) {
-
         if (!transaction || transaction.type !== 'venda') {
             throw new Error('Transação inválida ou não é uma venda');
         }
@@ -27,13 +35,12 @@ export class MonthlyTaxService {
         let remainingQuantity = transaction.quantity;
         let totalCost = 0;
         let totalQuantity = 0;
-        const updates = [];
 
-        // Calcular média ponderada e preparar atualizações
+        // Calcular média ponderada e atualizar quantidades vendidas
         for (const buyTx of buyTransactions) {
             totalCost += Number(buyTx.price_per_unit);
 
-            // Se não há mais quantidade para vender, para o loop
+            // Se não há mais quantidade para vender, continua para a próxima compra
             if (remainingQuantity <= 0) continue;
 
             const availableQuantity = buyTx.quantity - buyTx.ticker_seller;
@@ -134,6 +141,11 @@ export class MonthlyTaxService {
         });
     }
 
+    /**
+     * Cria um novo registro de imposto mensal
+     * @param data - Dados do imposto a ser criado
+     * @returns Registro de imposto criado
+     */
     async create(data: CreateMonthlyTaxInput) {
         return prisma.monthlyTax.create({
             data,
@@ -149,6 +161,11 @@ export class MonthlyTaxService {
         });
     }
 
+    /**
+     * Busca todos os registros de imposto com filtros opcionais
+     * @param filters - Filtros para a busca
+     * @returns Lista de registros de imposto
+     */
     async findAll(filters: MonthlyTaxFilters = {}) {
         const where: any = {};
         
@@ -179,6 +196,11 @@ export class MonthlyTaxService {
         });
     }
 
+    /**
+     * Busca um registro de imposto pelo ID
+     * @param id - ID do registro de imposto
+     * @returns Registro de imposto encontrado
+     */
     async findById(id: string) {
         return prisma.monthlyTax.findUnique({
             where: { id },
@@ -194,6 +216,12 @@ export class MonthlyTaxService {
         });
     }
 
+    /**
+     * Atualiza um registro de imposto
+     * @param id - ID do registro de imposto
+     * @param data - Dados a serem atualizados
+     * @returns Registro de imposto atualizado
+     */
     async update(id: string, data: UpdateMonthlyTaxInput) {
         return prisma.monthlyTax.update({
             where: { id },
@@ -210,6 +238,11 @@ export class MonthlyTaxService {
         });
     }
 
+    /**
+     * Remove um registro de imposto
+     * @param id - ID do registro de imposto
+     * @returns Registro de imposto removido
+     */
     async delete(id: string) {
         return prisma.monthlyTax.delete({
             where: { id }

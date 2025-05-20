@@ -1,6 +1,6 @@
 import { FastifyInstance } from 'fastify';
 import { AuthController } from '../controllers/AuthController';
-import { userSchema, errorSchema, authSchema } from '../schemas';
+import { errorSchema, authSchema } from '../schemas';
 
 /**
  * Configuração das rotas de autenticação
@@ -14,10 +14,11 @@ export async function authRoutes(app: FastifyInstance) {
             summary: 'Registra um novo usuário',
             body: {
                 type: 'object',
-                required: ['email', 'password'],
+                required: ['email', 'password', 'name'],
                 properties: {
                     email: { type: 'string', format: 'email' },
-                    password: { type: 'string', minLength: 6 }
+                    password: { type: 'string', minLength: 6 },
+                    name: {type: 'string'}
                 }
             },
             response: {
