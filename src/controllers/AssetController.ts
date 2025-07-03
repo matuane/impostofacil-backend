@@ -23,7 +23,7 @@ export class AssetController {
         } catch (error) {
             console.error('Erro ao criar ativo:', error);
             return reply.status(500).send({
-                error: 'Erro interno do servidor ao criar ativo'
+                error: `Erro interno do servidor ao criar ativo: ${error}`
             });
         }
     }

@@ -156,6 +156,17 @@ export class MonthlyTaxService {
                         email: true,
                         name: true
                     }
+                },
+                transactions: {
+                    include: {
+                        asset: {
+                            select: {
+                                id: true,
+                                ticker: true,
+                                type: true
+                            }
+                        }
+                    }
                 }
             }
         });
@@ -191,6 +202,17 @@ export class MonthlyTaxService {
                         email: true,
                         name: true
                     }
+                },
+                transactions: {
+                    include: {
+                        asset: {
+                            select: {
+                                id: true,
+                                ticker: true,
+                                type: true
+                            }
+                        }
+                    }
                 }
             }
         });
@@ -210,6 +232,17 @@ export class MonthlyTaxService {
                         id: true,
                         email: true,
                         name: true
+                    }
+                },
+                transactions: {
+                    include: {
+                        asset: {
+                            select: {
+                                id: true,
+                                ticker: true,
+                                type: true
+                            }
+                        }
                     }
                 }
             }
@@ -233,6 +266,17 @@ export class MonthlyTaxService {
                         email: true,
                         name: true
                     }
+                },
+                transactions: {
+                    include: {
+                        asset: {
+                            select: {
+                                id: true,
+                                ticker: true,
+                                type: true
+                            }
+                        }
+                    }
                 }
             }
         });
@@ -246,6 +290,76 @@ export class MonthlyTaxService {
     async delete(id: string) {
         return prisma.monthlyTax.delete({
             where: { id }
+        });
+    }
+
+    /**
+     * Associa transações a um registro de imposto mensal
+     * @param monthlyTaxId - ID do registro de imposto mensal
+     * @param transactionIds - Array de IDs das transações a serem associadas
+     * @returns Registro de imposto atualizado com as transações
+     */
+    async associateTransactions(monthlyTaxId: string, transactionIds: string[]) {
+        // Primeiro, desassocia todas as transações existentes
+        await prisma.transaction.updateMany({
+            where: {
+                monthlyTaxId: monthlyTaxId
+            },
+            data: {
+                monthlyTaxId: null
+            }
+        });
+
+        // Depois, associa as novas transações
+        if (transactionIds.length > 0) {
+            await prisma.transaction.updateMany({
+                where: {
+                    id: {
+                        in: transactionIds
+                    }
+                },
+                data: {
+                    monthlyTaxId: monthlyTaxId
+                }
+            });
+        }
+
+        // Retorna o registro atualizado com as transações
+        return this.findById(monthlyTaxId);
+    }
+
+    /**
+     * Busca transações não associadas a nenhum imposto mensal
+     * @param userId - ID do usuário
+     * @param assetType - Tipo de ativo (opcional)
+     * @returns Lista de transações não associadas
+     */
+    async findUnassociatedTransactions(userId: string, assetType?: string) {
+        const where: any = {
+            userId: userId,
+            monthlyTaxId: null
+        };
+
+        if (assetType) {
+            where.asset = {
+                type: assetType
+            };
+        }
+
+        return prisma.transaction.findMany({
+            where,
+            include: {
+                asset: {
+                    select: {
+                        id: true,
+                        ticker: true,
+                        type: true
+                    }
+                }
+            },
+            orderBy: {
+                date: 'asc'
+            }
         });
     }
 } 

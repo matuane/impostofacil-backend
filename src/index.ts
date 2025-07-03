@@ -10,6 +10,7 @@ import { authRoutes } from "./routes/auth.routes";
 import { assetRoutes } from "./routes/assets.route";
 import { transactionRoutes } from "./routes/transactions.route";
 import { monthlyTaxRoutes } from "./routes/monthlyTaxes.route";
+import { dashboardRoutes } from "./routes/dashboard.route";
 import { swaggerOptions, swaggerUiOptions } from "./config/swagger";
 
 export const app = fastify({ logger: true });
@@ -52,6 +53,7 @@ const initialize = async () => {
     await app.register(assetRoutes, { prefix: '/assets' });
     await app.register(transactionRoutes, { prefix: '/transactions' });
     await app.register(monthlyTaxRoutes, { prefix: '/monthly-taxes' });
+    await app.register(dashboardRoutes, { prefix: '/dashboard' });
 
     return app;
 };
@@ -60,7 +62,7 @@ const initialize = async () => {
 const start = async () => {
     try {
         await initialize();
-        await app.listen({ port: 3000 });
+        await app.listen({ port: 3001 });
         console.log('Server running at http://localhost:3000');
         console.log('Swagger documentation available at http://localhost:3000/docs');
     } catch (err) {

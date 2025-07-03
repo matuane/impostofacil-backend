@@ -16,8 +16,8 @@ export interface CreateTransactionInput {
 
 export interface UpdateTransactionInput {
     type?: string;
-    date?: Date;
+    date?: string | Date;
     quantity?: number;
-    price_per_unit?: number;
-    total_value?: number;
+    price_per_unit?: number | string;
+    total_value?: number | string;
 }

@@ -76,4 +76,44 @@ export class MonthlyTaxController {
             });
         }
     }
+
+    async associateTransactions(request: FastifyRequest<{
+        Params: { id: string }
+        Body: { transactionIds: string[] }
+    }>, reply: FastifyReply) {
+        try {
+            const { id } = request.params;
+            const { transactionIds } = request.body;
+
+            const monthlyTax = await this.monthlyTaxService.associateTransactions(id, transactionIds);
+            return reply.send(monthlyTax);
+        } catch (error) {
+            console.error('Erro ao associar transações ao imposto mensal:', error);
+            return reply.status(500).send({
+                error: 'Erro interno do servidor ao associar transações'
+            });
+        }
+    }
+
+    async findUnassociatedTransactions(request: FastifyRequest<{
+        Querystring: { userId: string; assetType?: string }
+    }>, reply: FastifyReply) {
+        try {
+            const { userId, assetType } = request.query;
+            
+            if (!userId) {
+                return reply.status(400).send({
+                    error: 'userId é obrigatório'
+                });
+            }
+
+            const transactions = await this.monthlyTaxService.findUnassociatedTransactions(userId, assetType);
+            return reply.send(transactions);
+        } catch (error) {
+            console.error('Erro ao buscar transações não associadas:', error);
+            return reply.status(500).send({
+                error: 'Erro interno do servidor ao buscar transações'
+            });
+        }
+    }
 } 

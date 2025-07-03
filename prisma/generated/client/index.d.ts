@@ -1209,6 +1209,37 @@ export namespace Prisma {
 
 
   /**
+   * Count Type MonthlyTaxCountOutputType
+   */
+
+  export type MonthlyTaxCountOutputType = {
+    transactions: number
+  }
+
+  export type MonthlyTaxCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    transactions?: boolean | MonthlyTaxCountOutputTypeCountTransactionsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * MonthlyTaxCountOutputType without action
+   */
+  export type MonthlyTaxCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MonthlyTaxCountOutputType
+     */
+    select?: MonthlyTaxCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * MonthlyTaxCountOutputType without action
+   */
+  export type MonthlyTaxCountOutputTypeCountTransactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TransactionWhereInput
+  }
+
+
+  /**
    * Models
    */
 
@@ -3442,6 +3473,7 @@ export namespace Prisma {
     ticker_seller: number | null
     userId: string | null
     assetId: string | null
+    monthlyTaxId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -3456,6 +3488,7 @@ export namespace Prisma {
     ticker_seller: number | null
     userId: string | null
     assetId: string | null
+    monthlyTaxId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -3470,6 +3503,7 @@ export namespace Prisma {
     ticker_seller: number
     userId: number
     assetId: number
+    monthlyTaxId: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -3500,6 +3534,7 @@ export namespace Prisma {
     ticker_seller?: true
     userId?: true
     assetId?: true
+    monthlyTaxId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -3514,6 +3549,7 @@ export namespace Prisma {
     ticker_seller?: true
     userId?: true
     assetId?: true
+    monthlyTaxId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -3528,6 +3564,7 @@ export namespace Prisma {
     ticker_seller?: true
     userId?: true
     assetId?: true
+    monthlyTaxId?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -3629,6 +3666,7 @@ export namespace Prisma {
     ticker_seller: number
     userId: string
     assetId: string
+    monthlyTaxId: string | null
     createdAt: Date
     updatedAt: Date
     _count: TransactionCountAggregateOutputType | null
@@ -3662,10 +3700,12 @@ export namespace Prisma {
     ticker_seller?: boolean
     userId?: boolean
     assetId?: boolean
+    monthlyTaxId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     asset?: boolean | AssetDefaultArgs<ExtArgs>
+    monthlyTax?: boolean | Transaction$monthlyTaxArgs<ExtArgs>
   }, ExtArgs["result"]["transaction"]>
 
   export type TransactionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -3678,10 +3718,12 @@ export namespace Prisma {
     ticker_seller?: boolean
     userId?: boolean
     assetId?: boolean
+    monthlyTaxId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     asset?: boolean | AssetDefaultArgs<ExtArgs>
+    monthlyTax?: boolean | Transaction$monthlyTaxArgs<ExtArgs>
   }, ExtArgs["result"]["transaction"]>
 
   export type TransactionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -3694,10 +3736,12 @@ export namespace Prisma {
     ticker_seller?: boolean
     userId?: boolean
     assetId?: boolean
+    monthlyTaxId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     asset?: boolean | AssetDefaultArgs<ExtArgs>
+    monthlyTax?: boolean | Transaction$monthlyTaxArgs<ExtArgs>
   }, ExtArgs["result"]["transaction"]>
 
   export type TransactionSelectScalar = {
@@ -3710,22 +3754,26 @@ export namespace Prisma {
     ticker_seller?: boolean
     userId?: boolean
     assetId?: boolean
+    monthlyTaxId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type TransactionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "type" | "date" | "quantity" | "price_per_unit" | "total_value" | "ticker_seller" | "userId" | "assetId" | "createdAt" | "updatedAt", ExtArgs["result"]["transaction"]>
+  export type TransactionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "type" | "date" | "quantity" | "price_per_unit" | "total_value" | "ticker_seller" | "userId" | "assetId" | "monthlyTaxId" | "createdAt" | "updatedAt", ExtArgs["result"]["transaction"]>
   export type TransactionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     asset?: boolean | AssetDefaultArgs<ExtArgs>
+    monthlyTax?: boolean | Transaction$monthlyTaxArgs<ExtArgs>
   }
   export type TransactionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     asset?: boolean | AssetDefaultArgs<ExtArgs>
+    monthlyTax?: boolean | Transaction$monthlyTaxArgs<ExtArgs>
   }
   export type TransactionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     asset?: boolean | AssetDefaultArgs<ExtArgs>
+    monthlyTax?: boolean | Transaction$monthlyTaxArgs<ExtArgs>
   }
 
   export type $TransactionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3733,6 +3781,7 @@ export namespace Prisma {
     objects: {
       user: Prisma.$UserPayload<ExtArgs>
       asset: Prisma.$AssetPayload<ExtArgs>
+      monthlyTax: Prisma.$MonthlyTaxPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -3744,6 +3793,7 @@ export namespace Prisma {
       ticker_seller: number
       userId: string
       assetId: string
+      monthlyTaxId: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["transaction"]>
@@ -4142,6 +4192,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     asset<T extends AssetDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AssetDefaultArgs<ExtArgs>>): Prisma__AssetClient<$Result.GetResult<Prisma.$AssetPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    monthlyTax<T extends Transaction$monthlyTaxArgs<ExtArgs> = {}>(args?: Subset<T, Transaction$monthlyTaxArgs<ExtArgs>>): Prisma__MonthlyTaxClient<$Result.GetResult<Prisma.$MonthlyTaxPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4180,6 +4231,7 @@ export namespace Prisma {
     readonly ticker_seller: FieldRef<"Transaction", 'Int'>
     readonly userId: FieldRef<"Transaction", 'String'>
     readonly assetId: FieldRef<"Transaction", 'String'>
+    readonly monthlyTaxId: FieldRef<"Transaction", 'String'>
     readonly createdAt: FieldRef<"Transaction", 'DateTime'>
     readonly updatedAt: FieldRef<"Transaction", 'DateTime'>
   }
@@ -4578,6 +4630,25 @@ export namespace Prisma {
   }
 
   /**
+   * Transaction.monthlyTax
+   */
+  export type Transaction$monthlyTaxArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MonthlyTax
+     */
+    select?: MonthlyTaxSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MonthlyTax
+     */
+    omit?: MonthlyTaxOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MonthlyTaxInclude<ExtArgs> | null
+    where?: MonthlyTaxWhereInput
+  }
+
+  /**
    * Transaction without action
    */
   export type TransactionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4851,6 +4922,8 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
+    transactions?: boolean | MonthlyTax$transactionsArgs<ExtArgs>
+    _count?: boolean | MonthlyTaxCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["monthlyTax"]>
 
   export type MonthlyTaxSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -4897,6 +4970,8 @@ export namespace Prisma {
   export type MonthlyTaxOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "year" | "month" | "asset_type" | "total_gain" | "carried_forward_tax" | "tax_due" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["monthlyTax"]>
   export type MonthlyTaxInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
+    transactions?: boolean | MonthlyTax$transactionsArgs<ExtArgs>
+    _count?: boolean | MonthlyTaxCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type MonthlyTaxIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -4909,6 +4984,7 @@ export namespace Prisma {
     name: "MonthlyTax"
     objects: {
       user: Prisma.$UserPayload<ExtArgs>
+      transactions: Prisma.$TransactionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -5316,6 +5392,7 @@ export namespace Prisma {
   export interface Prisma__MonthlyTaxClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    transactions<T extends MonthlyTax$transactionsArgs<ExtArgs> = {}>(args?: Subset<T, MonthlyTax$transactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5751,6 +5828,30 @@ export namespace Prisma {
   }
 
   /**
+   * MonthlyTax.transactions
+   */
+  export type MonthlyTax$transactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Transaction
+     */
+    select?: TransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Transaction
+     */
+    omit?: TransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TransactionInclude<ExtArgs> | null
+    where?: TransactionWhereInput
+    orderBy?: TransactionOrderByWithRelationInput | TransactionOrderByWithRelationInput[]
+    cursor?: TransactionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TransactionScalarFieldEnum | TransactionScalarFieldEnum[]
+  }
+
+  /**
    * MonthlyTax without action
    */
   export type MonthlyTaxDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5817,6 +5918,7 @@ export namespace Prisma {
     ticker_seller: 'ticker_seller',
     userId: 'userId',
     assetId: 'assetId',
+    monthlyTaxId: 'monthlyTaxId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -6078,10 +6180,12 @@ export namespace Prisma {
     ticker_seller?: IntFilter<"Transaction"> | number
     userId?: StringFilter<"Transaction"> | string
     assetId?: StringFilter<"Transaction"> | string
+    monthlyTaxId?: StringNullableFilter<"Transaction"> | string | null
     createdAt?: DateTimeFilter<"Transaction"> | Date | string
     updatedAt?: DateTimeFilter<"Transaction"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     asset?: XOR<AssetScalarRelationFilter, AssetWhereInput>
+    monthlyTax?: XOR<MonthlyTaxNullableScalarRelationFilter, MonthlyTaxWhereInput> | null
   }
 
   export type TransactionOrderByWithRelationInput = {
@@ -6094,10 +6198,12 @@ export namespace Prisma {
     ticker_seller?: SortOrder
     userId?: SortOrder
     assetId?: SortOrder
+    monthlyTaxId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     user?: UserOrderByWithRelationInput
     asset?: AssetOrderByWithRelationInput
+    monthlyTax?: MonthlyTaxOrderByWithRelationInput
   }
 
   export type TransactionWhereUniqueInput = Prisma.AtLeast<{
@@ -6113,10 +6219,12 @@ export namespace Prisma {
     ticker_seller?: IntFilter<"Transaction"> | number
     userId?: StringFilter<"Transaction"> | string
     assetId?: StringFilter<"Transaction"> | string
+    monthlyTaxId?: StringNullableFilter<"Transaction"> | string | null
     createdAt?: DateTimeFilter<"Transaction"> | Date | string
     updatedAt?: DateTimeFilter<"Transaction"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     asset?: XOR<AssetScalarRelationFilter, AssetWhereInput>
+    monthlyTax?: XOR<MonthlyTaxNullableScalarRelationFilter, MonthlyTaxWhereInput> | null
   }, "id">
 
   export type TransactionOrderByWithAggregationInput = {
@@ -6129,6 +6237,7 @@ export namespace Prisma {
     ticker_seller?: SortOrder
     userId?: SortOrder
     assetId?: SortOrder
+    monthlyTaxId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: TransactionCountOrderByAggregateInput
@@ -6151,6 +6260,7 @@ export namespace Prisma {
     ticker_seller?: IntWithAggregatesFilter<"Transaction"> | number
     userId?: StringWithAggregatesFilter<"Transaction"> | string
     assetId?: StringWithAggregatesFilter<"Transaction"> | string
+    monthlyTaxId?: StringNullableWithAggregatesFilter<"Transaction"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Transaction"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Transaction"> | Date | string
   }
@@ -6170,6 +6280,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"MonthlyTax"> | Date | string
     updatedAt?: DateTimeFilter<"MonthlyTax"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    transactions?: TransactionListRelationFilter
   }
 
   export type MonthlyTaxOrderByWithRelationInput = {
@@ -6184,6 +6295,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     user?: UserOrderByWithRelationInput
+    transactions?: TransactionOrderByRelationAggregateInput
   }
 
   export type MonthlyTaxWhereUniqueInput = Prisma.AtLeast<{
@@ -6201,6 +6313,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"MonthlyTax"> | Date | string
     updatedAt?: DateTimeFilter<"MonthlyTax"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    transactions?: TransactionListRelationFilter
   }, "id">
 
   export type MonthlyTaxOrderByWithAggregationInput = {
@@ -6387,6 +6500,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutTransactionsInput
     asset: AssetCreateNestedOneWithoutTransactionsInput
+    monthlyTax?: MonthlyTaxCreateNestedOneWithoutTransactionsInput
   }
 
   export type TransactionUncheckedCreateInput = {
@@ -6399,6 +6513,7 @@ export namespace Prisma {
     ticker_seller?: number
     userId: string
     assetId: string
+    monthlyTaxId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -6415,6 +6530,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutTransactionsNestedInput
     asset?: AssetUpdateOneRequiredWithoutTransactionsNestedInput
+    monthlyTax?: MonthlyTaxUpdateOneWithoutTransactionsNestedInput
   }
 
   export type TransactionUncheckedUpdateInput = {
@@ -6427,6 +6543,7 @@ export namespace Prisma {
     ticker_seller?: IntFieldUpdateOperationsInput | number
     userId?: StringFieldUpdateOperationsInput | string
     assetId?: StringFieldUpdateOperationsInput | string
+    monthlyTaxId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -6441,6 +6558,7 @@ export namespace Prisma {
     ticker_seller?: number
     userId: string
     assetId: string
+    monthlyTaxId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -6467,6 +6585,7 @@ export namespace Prisma {
     ticker_seller?: IntFieldUpdateOperationsInput | number
     userId?: StringFieldUpdateOperationsInput | string
     assetId?: StringFieldUpdateOperationsInput | string
+    monthlyTaxId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -6482,6 +6601,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutMonthlyTaxesInput
+    transactions?: TransactionCreateNestedManyWithoutMonthlyTaxInput
   }
 
   export type MonthlyTaxUncheckedCreateInput = {
@@ -6495,6 +6615,7 @@ export namespace Prisma {
     userId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    transactions?: TransactionUncheckedCreateNestedManyWithoutMonthlyTaxInput
   }
 
   export type MonthlyTaxUpdateInput = {
@@ -6508,6 +6629,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutMonthlyTaxesNestedInput
+    transactions?: TransactionUpdateManyWithoutMonthlyTaxNestedInput
   }
 
   export type MonthlyTaxUncheckedUpdateInput = {
@@ -6521,6 +6643,7 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    transactions?: TransactionUncheckedUpdateManyWithoutMonthlyTaxNestedInput
   }
 
   export type MonthlyTaxCreateManyInput = {
@@ -6763,6 +6886,11 @@ export namespace Prisma {
     isNot?: AssetWhereInput
   }
 
+  export type MonthlyTaxNullableScalarRelationFilter = {
+    is?: MonthlyTaxWhereInput | null
+    isNot?: MonthlyTaxWhereInput | null
+  }
+
   export type TransactionCountOrderByAggregateInput = {
     id?: SortOrder
     type?: SortOrder
@@ -6773,6 +6901,7 @@ export namespace Prisma {
     ticker_seller?: SortOrder
     userId?: SortOrder
     assetId?: SortOrder
+    monthlyTaxId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -6794,6 +6923,7 @@ export namespace Prisma {
     ticker_seller?: SortOrder
     userId?: SortOrder
     assetId?: SortOrder
+    monthlyTaxId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -6808,6 +6938,7 @@ export namespace Prisma {
     ticker_seller?: SortOrder
     userId?: SortOrder
     assetId?: SortOrder
+    monthlyTaxId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -7056,6 +7187,12 @@ export namespace Prisma {
     connect?: AssetWhereUniqueInput
   }
 
+  export type MonthlyTaxCreateNestedOneWithoutTransactionsInput = {
+    create?: XOR<MonthlyTaxCreateWithoutTransactionsInput, MonthlyTaxUncheckedCreateWithoutTransactionsInput>
+    connectOrCreate?: MonthlyTaxCreateOrConnectWithoutTransactionsInput
+    connect?: MonthlyTaxWhereUniqueInput
+  }
+
   export type IntFieldUpdateOperationsInput = {
     set?: number
     increment?: number
@@ -7088,10 +7225,34 @@ export namespace Prisma {
     update?: XOR<XOR<AssetUpdateToOneWithWhereWithoutTransactionsInput, AssetUpdateWithoutTransactionsInput>, AssetUncheckedUpdateWithoutTransactionsInput>
   }
 
+  export type MonthlyTaxUpdateOneWithoutTransactionsNestedInput = {
+    create?: XOR<MonthlyTaxCreateWithoutTransactionsInput, MonthlyTaxUncheckedCreateWithoutTransactionsInput>
+    connectOrCreate?: MonthlyTaxCreateOrConnectWithoutTransactionsInput
+    upsert?: MonthlyTaxUpsertWithoutTransactionsInput
+    disconnect?: MonthlyTaxWhereInput | boolean
+    delete?: MonthlyTaxWhereInput | boolean
+    connect?: MonthlyTaxWhereUniqueInput
+    update?: XOR<XOR<MonthlyTaxUpdateToOneWithWhereWithoutTransactionsInput, MonthlyTaxUpdateWithoutTransactionsInput>, MonthlyTaxUncheckedUpdateWithoutTransactionsInput>
+  }
+
   export type UserCreateNestedOneWithoutMonthlyTaxesInput = {
     create?: XOR<UserCreateWithoutMonthlyTaxesInput, UserUncheckedCreateWithoutMonthlyTaxesInput>
     connectOrCreate?: UserCreateOrConnectWithoutMonthlyTaxesInput
     connect?: UserWhereUniqueInput
+  }
+
+  export type TransactionCreateNestedManyWithoutMonthlyTaxInput = {
+    create?: XOR<TransactionCreateWithoutMonthlyTaxInput, TransactionUncheckedCreateWithoutMonthlyTaxInput> | TransactionCreateWithoutMonthlyTaxInput[] | TransactionUncheckedCreateWithoutMonthlyTaxInput[]
+    connectOrCreate?: TransactionCreateOrConnectWithoutMonthlyTaxInput | TransactionCreateOrConnectWithoutMonthlyTaxInput[]
+    createMany?: TransactionCreateManyMonthlyTaxInputEnvelope
+    connect?: TransactionWhereUniqueInput | TransactionWhereUniqueInput[]
+  }
+
+  export type TransactionUncheckedCreateNestedManyWithoutMonthlyTaxInput = {
+    create?: XOR<TransactionCreateWithoutMonthlyTaxInput, TransactionUncheckedCreateWithoutMonthlyTaxInput> | TransactionCreateWithoutMonthlyTaxInput[] | TransactionUncheckedCreateWithoutMonthlyTaxInput[]
+    connectOrCreate?: TransactionCreateOrConnectWithoutMonthlyTaxInput | TransactionCreateOrConnectWithoutMonthlyTaxInput[]
+    createMany?: TransactionCreateManyMonthlyTaxInputEnvelope
+    connect?: TransactionWhereUniqueInput | TransactionWhereUniqueInput[]
   }
 
   export type UserUpdateOneRequiredWithoutMonthlyTaxesNestedInput = {
@@ -7100,6 +7261,34 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutMonthlyTaxesInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutMonthlyTaxesInput, UserUpdateWithoutMonthlyTaxesInput>, UserUncheckedUpdateWithoutMonthlyTaxesInput>
+  }
+
+  export type TransactionUpdateManyWithoutMonthlyTaxNestedInput = {
+    create?: XOR<TransactionCreateWithoutMonthlyTaxInput, TransactionUncheckedCreateWithoutMonthlyTaxInput> | TransactionCreateWithoutMonthlyTaxInput[] | TransactionUncheckedCreateWithoutMonthlyTaxInput[]
+    connectOrCreate?: TransactionCreateOrConnectWithoutMonthlyTaxInput | TransactionCreateOrConnectWithoutMonthlyTaxInput[]
+    upsert?: TransactionUpsertWithWhereUniqueWithoutMonthlyTaxInput | TransactionUpsertWithWhereUniqueWithoutMonthlyTaxInput[]
+    createMany?: TransactionCreateManyMonthlyTaxInputEnvelope
+    set?: TransactionWhereUniqueInput | TransactionWhereUniqueInput[]
+    disconnect?: TransactionWhereUniqueInput | TransactionWhereUniqueInput[]
+    delete?: TransactionWhereUniqueInput | TransactionWhereUniqueInput[]
+    connect?: TransactionWhereUniqueInput | TransactionWhereUniqueInput[]
+    update?: TransactionUpdateWithWhereUniqueWithoutMonthlyTaxInput | TransactionUpdateWithWhereUniqueWithoutMonthlyTaxInput[]
+    updateMany?: TransactionUpdateManyWithWhereWithoutMonthlyTaxInput | TransactionUpdateManyWithWhereWithoutMonthlyTaxInput[]
+    deleteMany?: TransactionScalarWhereInput | TransactionScalarWhereInput[]
+  }
+
+  export type TransactionUncheckedUpdateManyWithoutMonthlyTaxNestedInput = {
+    create?: XOR<TransactionCreateWithoutMonthlyTaxInput, TransactionUncheckedCreateWithoutMonthlyTaxInput> | TransactionCreateWithoutMonthlyTaxInput[] | TransactionUncheckedCreateWithoutMonthlyTaxInput[]
+    connectOrCreate?: TransactionCreateOrConnectWithoutMonthlyTaxInput | TransactionCreateOrConnectWithoutMonthlyTaxInput[]
+    upsert?: TransactionUpsertWithWhereUniqueWithoutMonthlyTaxInput | TransactionUpsertWithWhereUniqueWithoutMonthlyTaxInput[]
+    createMany?: TransactionCreateManyMonthlyTaxInputEnvelope
+    set?: TransactionWhereUniqueInput | TransactionWhereUniqueInput[]
+    disconnect?: TransactionWhereUniqueInput | TransactionWhereUniqueInput[]
+    delete?: TransactionWhereUniqueInput | TransactionWhereUniqueInput[]
+    connect?: TransactionWhereUniqueInput | TransactionWhereUniqueInput[]
+    update?: TransactionUpdateWithWhereUniqueWithoutMonthlyTaxInput | TransactionUpdateWithWhereUniqueWithoutMonthlyTaxInput[]
+    updateMany?: TransactionUpdateManyWithWhereWithoutMonthlyTaxInput | TransactionUpdateManyWithWhereWithoutMonthlyTaxInput[]
+    deleteMany?: TransactionScalarWhereInput | TransactionScalarWhereInput[]
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -7276,6 +7465,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     asset: AssetCreateNestedOneWithoutTransactionsInput
+    monthlyTax?: MonthlyTaxCreateNestedOneWithoutTransactionsInput
   }
 
   export type TransactionUncheckedCreateWithoutUserInput = {
@@ -7287,6 +7477,7 @@ export namespace Prisma {
     total_value: Decimal | DecimalJsLike | number | string
     ticker_seller?: number
     assetId: string
+    monthlyTaxId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -7311,6 +7502,7 @@ export namespace Prisma {
     tax_due: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
     updatedAt?: Date | string
+    transactions?: TransactionCreateNestedManyWithoutMonthlyTaxInput
   }
 
   export type MonthlyTaxUncheckedCreateWithoutUserInput = {
@@ -7323,6 +7515,7 @@ export namespace Prisma {
     tax_due: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
     updatedAt?: Date | string
+    transactions?: TransactionUncheckedCreateNestedManyWithoutMonthlyTaxInput
   }
 
   export type MonthlyTaxCreateOrConnectWithoutUserInput = {
@@ -7364,6 +7557,7 @@ export namespace Prisma {
     ticker_seller?: IntFilter<"Transaction"> | number
     userId?: StringFilter<"Transaction"> | string
     assetId?: StringFilter<"Transaction"> | string
+    monthlyTaxId?: StringNullableFilter<"Transaction"> | string | null
     createdAt?: DateTimeFilter<"Transaction"> | Date | string
     updatedAt?: DateTimeFilter<"Transaction"> | Date | string
   }
@@ -7411,6 +7605,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutTransactionsInput
+    monthlyTax?: MonthlyTaxCreateNestedOneWithoutTransactionsInput
   }
 
   export type TransactionUncheckedCreateWithoutAssetInput = {
@@ -7422,6 +7617,7 @@ export namespace Prisma {
     total_value: Decimal | DecimalJsLike | number | string
     ticker_seller?: number
     userId: string
+    monthlyTaxId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -7500,6 +7696,37 @@ export namespace Prisma {
     create: XOR<AssetCreateWithoutTransactionsInput, AssetUncheckedCreateWithoutTransactionsInput>
   }
 
+  export type MonthlyTaxCreateWithoutTransactionsInput = {
+    id?: string
+    year: number
+    month: number
+    asset_type: string
+    total_gain: Decimal | DecimalJsLike | number | string
+    carried_forward_tax: Decimal | DecimalJsLike | number | string
+    tax_due: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutMonthlyTaxesInput
+  }
+
+  export type MonthlyTaxUncheckedCreateWithoutTransactionsInput = {
+    id?: string
+    year: number
+    month: number
+    asset_type: string
+    total_gain: Decimal | DecimalJsLike | number | string
+    carried_forward_tax: Decimal | DecimalJsLike | number | string
+    tax_due: Decimal | DecimalJsLike | number | string
+    userId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type MonthlyTaxCreateOrConnectWithoutTransactionsInput = {
+    where: MonthlyTaxWhereUniqueInput
+    create: XOR<MonthlyTaxCreateWithoutTransactionsInput, MonthlyTaxUncheckedCreateWithoutTransactionsInput>
+  }
+
   export type UserUpsertWithoutTransactionsInput = {
     update: XOR<UserUpdateWithoutTransactionsInput, UserUncheckedUpdateWithoutTransactionsInput>
     create: XOR<UserCreateWithoutTransactionsInput, UserUncheckedCreateWithoutTransactionsInput>
@@ -7560,6 +7787,43 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type MonthlyTaxUpsertWithoutTransactionsInput = {
+    update: XOR<MonthlyTaxUpdateWithoutTransactionsInput, MonthlyTaxUncheckedUpdateWithoutTransactionsInput>
+    create: XOR<MonthlyTaxCreateWithoutTransactionsInput, MonthlyTaxUncheckedCreateWithoutTransactionsInput>
+    where?: MonthlyTaxWhereInput
+  }
+
+  export type MonthlyTaxUpdateToOneWithWhereWithoutTransactionsInput = {
+    where?: MonthlyTaxWhereInput
+    data: XOR<MonthlyTaxUpdateWithoutTransactionsInput, MonthlyTaxUncheckedUpdateWithoutTransactionsInput>
+  }
+
+  export type MonthlyTaxUpdateWithoutTransactionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    month?: IntFieldUpdateOperationsInput | number
+    asset_type?: StringFieldUpdateOperationsInput | string
+    total_gain?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    carried_forward_tax?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    tax_due?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutMonthlyTaxesNestedInput
+  }
+
+  export type MonthlyTaxUncheckedUpdateWithoutTransactionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    month?: IntFieldUpdateOperationsInput | number
+    asset_type?: StringFieldUpdateOperationsInput | string
+    total_gain?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    carried_forward_tax?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    tax_due?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    userId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type UserCreateWithoutMonthlyTaxesInput = {
     id?: string
     email: string
@@ -7585,6 +7849,44 @@ export namespace Prisma {
   export type UserCreateOrConnectWithoutMonthlyTaxesInput = {
     where: UserWhereUniqueInput
     create: XOR<UserCreateWithoutMonthlyTaxesInput, UserUncheckedCreateWithoutMonthlyTaxesInput>
+  }
+
+  export type TransactionCreateWithoutMonthlyTaxInput = {
+    id?: string
+    type: string
+    date: Date | string
+    quantity: number
+    price_per_unit: Decimal | DecimalJsLike | number | string
+    total_value: Decimal | DecimalJsLike | number | string
+    ticker_seller?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutTransactionsInput
+    asset: AssetCreateNestedOneWithoutTransactionsInput
+  }
+
+  export type TransactionUncheckedCreateWithoutMonthlyTaxInput = {
+    id?: string
+    type: string
+    date: Date | string
+    quantity: number
+    price_per_unit: Decimal | DecimalJsLike | number | string
+    total_value: Decimal | DecimalJsLike | number | string
+    ticker_seller?: number
+    userId: string
+    assetId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TransactionCreateOrConnectWithoutMonthlyTaxInput = {
+    where: TransactionWhereUniqueInput
+    create: XOR<TransactionCreateWithoutMonthlyTaxInput, TransactionUncheckedCreateWithoutMonthlyTaxInput>
+  }
+
+  export type TransactionCreateManyMonthlyTaxInputEnvelope = {
+    data: TransactionCreateManyMonthlyTaxInput | TransactionCreateManyMonthlyTaxInput[]
+    skipDuplicates?: boolean
   }
 
   export type UserUpsertWithoutMonthlyTaxesInput = {
@@ -7620,6 +7922,22 @@ export namespace Prisma {
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
   }
 
+  export type TransactionUpsertWithWhereUniqueWithoutMonthlyTaxInput = {
+    where: TransactionWhereUniqueInput
+    update: XOR<TransactionUpdateWithoutMonthlyTaxInput, TransactionUncheckedUpdateWithoutMonthlyTaxInput>
+    create: XOR<TransactionCreateWithoutMonthlyTaxInput, TransactionUncheckedCreateWithoutMonthlyTaxInput>
+  }
+
+  export type TransactionUpdateWithWhereUniqueWithoutMonthlyTaxInput = {
+    where: TransactionWhereUniqueInput
+    data: XOR<TransactionUpdateWithoutMonthlyTaxInput, TransactionUncheckedUpdateWithoutMonthlyTaxInput>
+  }
+
+  export type TransactionUpdateManyWithWhereWithoutMonthlyTaxInput = {
+    where: TransactionScalarWhereInput
+    data: XOR<TransactionUpdateManyMutationInput, TransactionUncheckedUpdateManyWithoutMonthlyTaxInput>
+  }
+
   export type TransactionCreateManyUserInput = {
     id?: string
     type: string
@@ -7629,6 +7947,7 @@ export namespace Prisma {
     total_value: Decimal | DecimalJsLike | number | string
     ticker_seller?: number
     assetId: string
+    monthlyTaxId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -7656,6 +7975,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     asset?: AssetUpdateOneRequiredWithoutTransactionsNestedInput
+    monthlyTax?: MonthlyTaxUpdateOneWithoutTransactionsNestedInput
   }
 
   export type TransactionUncheckedUpdateWithoutUserInput = {
@@ -7667,6 +7987,7 @@ export namespace Prisma {
     total_value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     ticker_seller?: IntFieldUpdateOperationsInput | number
     assetId?: StringFieldUpdateOperationsInput | string
+    monthlyTaxId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -7680,6 +8001,7 @@ export namespace Prisma {
     total_value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     ticker_seller?: IntFieldUpdateOperationsInput | number
     assetId?: StringFieldUpdateOperationsInput | string
+    monthlyTaxId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -7694,6 +8016,7 @@ export namespace Prisma {
     tax_due?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    transactions?: TransactionUpdateManyWithoutMonthlyTaxNestedInput
   }
 
   export type MonthlyTaxUncheckedUpdateWithoutUserInput = {
@@ -7706,6 +8029,7 @@ export namespace Prisma {
     tax_due?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    transactions?: TransactionUncheckedUpdateManyWithoutMonthlyTaxNestedInput
   }
 
   export type MonthlyTaxUncheckedUpdateManyWithoutUserInput = {
@@ -7729,6 +8053,7 @@ export namespace Prisma {
     total_value: Decimal | DecimalJsLike | number | string
     ticker_seller?: number
     userId: string
+    monthlyTaxId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -7744,6 +8069,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutTransactionsNestedInput
+    monthlyTax?: MonthlyTaxUpdateOneWithoutTransactionsNestedInput
   }
 
   export type TransactionUncheckedUpdateWithoutAssetInput = {
@@ -7755,6 +8081,7 @@ export namespace Prisma {
     total_value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     ticker_seller?: IntFieldUpdateOperationsInput | number
     userId?: StringFieldUpdateOperationsInput | string
+    monthlyTaxId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -7768,6 +8095,63 @@ export namespace Prisma {
     total_value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     ticker_seller?: IntFieldUpdateOperationsInput | number
     userId?: StringFieldUpdateOperationsInput | string
+    monthlyTaxId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TransactionCreateManyMonthlyTaxInput = {
+    id?: string
+    type: string
+    date: Date | string
+    quantity: number
+    price_per_unit: Decimal | DecimalJsLike | number | string
+    total_value: Decimal | DecimalJsLike | number | string
+    ticker_seller?: number
+    userId: string
+    assetId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TransactionUpdateWithoutMonthlyTaxInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    price_per_unit?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    total_value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    ticker_seller?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutTransactionsNestedInput
+    asset?: AssetUpdateOneRequiredWithoutTransactionsNestedInput
+  }
+
+  export type TransactionUncheckedUpdateWithoutMonthlyTaxInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    price_per_unit?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    total_value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    ticker_seller?: IntFieldUpdateOperationsInput | number
+    userId?: StringFieldUpdateOperationsInput | string
+    assetId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TransactionUncheckedUpdateManyWithoutMonthlyTaxInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    price_per_unit?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    total_value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    ticker_seller?: IntFieldUpdateOperationsInput | number
+    userId?: StringFieldUpdateOperationsInput | string
+    assetId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

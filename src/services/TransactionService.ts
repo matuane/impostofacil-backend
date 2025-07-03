@@ -1,4 +1,3 @@
-import { PrismaClient } from '@prisma/client';
 import prisma from '../lib/prisma';
 import { CreateTransactionInput, TransactionFilters, UpdateTransactionInput } from '../interfaces/transactions';
 
@@ -55,36 +54,48 @@ export class TransactionService {
     }
 
     async update(id: string, data: UpdateTransactionInput) {
-        let updateData = { ...data };
-        
-        if (data.quantity && data.price_per_unit) {
-            updateData = {
-                ...updateData,
-                total_value: data.quantity * Number(data.price_per_unit)
-            };
-        } else if (data.quantity) {
-            const transaction = await prisma.transaction.findUnique({
-                where: { id }
-            });
-            if (transaction) {
-                updateData.total_value = (data.quantity * Number(transaction.price_per_unit));
-            }
-        } else if (data.price_per_unit) {
-            const transaction = await prisma.transaction.findUnique({
-                where: { id }
-            });
-            if (transaction) {
-                updateData.total_value = (transaction.quantity * Number(data.price_per_unit));
-            }
+        // Verificar se a transação existe
+        const existingTransaction = await prisma.transaction.findUnique({
+            where: { id }
+        });
+
+        if (!existingTransaction) {
+            throw new Error('Transaction not found');
         }
+
+        let updateData: any = {};
+        
+        // Converter e validar os dados
+        if (data.type !== undefined) updateData.type = data.type;
+        if (data.date !== undefined) updateData.date = new Date(data.date);
+        if (data.quantity !== undefined) updateData.quantity = Number(data.quantity);
+        if (data.price_per_unit !== undefined) updateData.price_per_unit = Number(data.price_per_unit);
+        
+        // Calcular total_value se quantity ou price_per_unit foram alterados
+        if (data.quantity !== undefined || data.price_per_unit !== undefined) {
+            const newQuantity = data.quantity !== undefined ? Number(data.quantity) : existingTransaction.quantity;
+            const newPrice = data.price_per_unit !== undefined ? Number(data.price_per_unit) : Number(existingTransaction.price_per_unit);
+            updateData.total_value = newQuantity * newPrice;
+        }
+
         return prisma.transaction.update({
             where: { id },
-            data: updateData
+            data: updateData,
+            include: {
+                user: {
+                    select: {
+                        id: true,
+                        email: true,
+                        name: true
+                    }
+                },
+                asset: true
+            }
         });
     }
 
     async delete(id: string) {
-        return await prisma.$transaction(async (prisma) => {
+        return await prisma.$transaction(async (prisma: any) => {
 
             const transaction = await prisma.transaction.findUnique({
                 where: { id }

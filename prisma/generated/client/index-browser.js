@@ -148,6 +148,7 @@ exports.Prisma.TransactionScalarFieldEnum = {
   ticker_seller: 'ticker_seller',
   userId: 'userId',
   assetId: 'assetId',
+  monthlyTaxId: 'monthlyTaxId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
